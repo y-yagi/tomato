@@ -31,6 +31,13 @@ func countDown(target time.Time) {
 
 func main() {
 	var tag string
+	_, err := initDB()
+
+	if err != nil {
+		fmt.Printf("Error: %v\n", err)
+		os.Exit(1)
+	}
+
 	start := time.Now()
 
 	finish := start.Add(defaultDuration)
