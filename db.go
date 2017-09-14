@@ -1,42 +1,61 @@
 package main
 
 import (
-	"database/sql"
 	"os"
+	"time"
 
+	"github.com/jmoiron/sqlx"
 	_ "github.com/mattn/go-sqlite3"
 )
+
+var schema = `
+CREATE TABLE tomatoes (
+	id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+	tag varchar,
+	created_at datetime NOT NULL
+);
+`
+
+type Tomato struct {
+	FirstName string    `db:"first_name"`
+	Tag       string    `db:"tag"`
+	CreatedAt time.Time `db:"created_at"`
+}
 
 func isExist(filename string) bool {
 	_, err := os.Stat(filename)
 	return err == nil
 }
 
-func initDB() (*sql.DB, error) {
-	// TODO: file name get from config
-	const DB = "goma.db"
-	const createTable = `
-	CREATE TABLE "tomatoes" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "tag" varchar, "created_at" datetime NOT NULL);
-	`
+// TODO: file name get from config
+const DB = "goma.db"
 
-	dbExist := false
-
+func initDB() error {
 	if isExist(DB) {
-		dbExist = true
+		return nil
 	}
 
-	db, err := sql.Open("sqlite3", DB)
+	db, err := sqlx.Connect("sqlite3", DB)
 	if err != nil {
-		return nil, err
+		return err
 	}
 	defer db.Close()
 
-	if !dbExist {
-		_, err = db.Exec(createTable)
-		if err != nil {
-			return nil, err
-		}
-	}
+	db.MustExec(schema)
 
-	return db, nil
+	return nil
+}
+
+func createTomato(tag string) error {
+	db, err := sqlx.Connect("sqlite3", DB)
+	if err != nil {
+		return err
+	}
+	defer db.Close()
+
+	tx := db.MustBegin()
+	tx.MustExec("INSERT INTO tomatoes(tag, created_at) VALUES ($1, $2)", tag, time.Now())
+	tx.Commit()
+
+	return nil
 }

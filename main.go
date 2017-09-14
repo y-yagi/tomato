@@ -31,7 +31,7 @@ func countDown(target time.Time) {
 
 func main() {
 	var tag string
-	_, err := initDB()
+	err := initDB()
 
 	if err != nil {
 		fmt.Printf("Error: %v\n", err)
@@ -62,5 +62,5 @@ func main() {
 	}
 
 	tag = scanner.Text()
-	fmt.Printf("Tag: %s\n", tag)
+	createTomato(tag)
 }
