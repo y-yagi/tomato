@@ -77,7 +77,7 @@ func main() {
 	var show string
 
 	flags := flag.NewFlagSet("goma", flag.ExitOnError)
-	flags.StringVar(&show, "s", "", "Show your tomatoes. You can specify range, 'today'(default), 'week', 'month', 'all'.")
+	flags.StringVar(&show, "s", "", "Show your tomatoes. You can specify range, 'today', 'week', 'month', 'all'.")
 	flags.Parse(os.Args[1:])
 
 	err := initDB()

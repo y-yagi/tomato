@@ -16,10 +16,24 @@ CREATE TABLE tomatoes (
 );
 `
 
+var selectQuery = `
+SELECT id, tag, created_at FROM tomatoes WHERE created_at BETWEEN $1 AND $2 ORDER BY created_at
+`
+
+var tagSummaryQuery = `
+SELECT COUNT(tag) as tag_count, tag FROM tomatoes WHERE tag != "" AND created_at BETWEEN $1 AND $2
+	GROUP BY tag ORDER BY tag_count DESC
+`
+
 type Tomato struct {
 	Id        int       `db:"id"`
 	Tag       string    `db:"tag"`
 	CreatedAt time.Time `db:"created_at"`
+}
+
+type TagSummary struct {
+	Count int    `db:"tag_count"`
+	Tag   string `db:"tag"`
 }
 
 func isExist(filename string) bool {
@@ -68,10 +82,26 @@ func selectTomatos(start time.Time, end time.Time) ([]Tomato, error) {
 	defer db.Close()
 
 	tomatoes := []Tomato{}
-	err = db.Select(&tomatoes, "SELECT id, tag, created_at FROM tomatoes WHERE created_at BETWEEN $1 AND $2 ORDER BY created_at ", start, end)
+	err = db.Select(&tomatoes, selectQuery, start, end)
 	if err != nil {
 		return nil, err
 	}
 
 	return tomatoes, nil
+}
+
+func selectTagSummary(start time.Time, end time.Time) ([]TagSummary, error) {
+	db, err := sqlx.Connect("sqlite3", DB)
+	if err != nil {
+		return nil, err
+	}
+	defer db.Close()
+
+	tagSummaries := []TagSummary{}
+	err = db.Select(&tagSummaries, tagSummaryQuery, start, end)
+	if err != nil {
+		return nil, err
+	}
+
+	return tagSummaries, nil
 }
