@@ -8,8 +8,10 @@ import (
 	"time"
 )
 
-// const defaultDuration = 1 * time.Minute
-const defaultDuration = 5 * time.Second
+// const duration = 1 * time.Minute
+const taskDuration = 5 * time.Second
+const restDuration = 3 * time.Second
+const longRestDuration = 5 * time.Second
 
 func formatMinutes(timeLeft time.Duration) string {
 	minutes := int(timeLeft.Minutes())
@@ -29,20 +31,10 @@ func countDown(target time.Time) {
 	}
 }
 
-func main() {
-	var tag string
-	err := initDB()
-
-	if err != nil {
-		fmt.Printf("Error: %v\n", err)
-		os.Exit(1)
-	}
-
+func runTask() error {
 	start := time.Now()
-
-	finish := start.Add(defaultDuration)
-
-	fmt.Printf("Start timer.\n\n")
+	finish := start.Add(taskDuration)
+	fmt.Printf("Start task.\n")
 
 	countDown(finish)
 
@@ -52,15 +44,52 @@ func main() {
 	fmt.Print("\nTag: ")
 
 	if !scanner.Scan() {
-		// Finish without tag
-		os.Exit(0)
+		return nil
 	}
 
 	if scanner.Err() != nil {
-		fmt.Printf("Error: %v\n", scanner.Err())
+		return scanner.Err()
+	}
+
+	tag := scanner.Text()
+	createTomato(tag)
+
+	return nil
+}
+
+func rest(duration time.Duration) {
+	start := time.Now()
+	finish := start.Add(duration)
+	fmt.Printf("\nStart rest.\n")
+
+	countDown(finish)
+
+	_ = exec.Command("mpg123", "data/ringing.mp3").Start()
+
+	scanner := bufio.NewScanner(os.Stdin)
+	fmt.Print("\nPlease press the Enter key for start next tomato.\n")
+	scanner.Scan()
+}
+
+func main() {
+	err := initDB()
+
+	if err != nil {
+		fmt.Printf("Error: %v\n", err)
 		os.Exit(1)
 	}
 
-	tag = scanner.Text()
-	createTomato(tag)
+	for i := 1; ; i++ {
+	  err = runTask()
+	  if err != nil {
+			fmt.Printf("Error: %v\n", err)
+			os.Exit(1)
+	  }
+
+		if i % 4 == 0 {
+			rest(longRestDuration)
+		} else {
+			rest(restDuration)
+		}
+	}
 }
