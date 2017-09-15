@@ -1,8 +1,8 @@
 package main
 
 import (
-	"flag"
 	"bufio"
+	"flag"
 	"fmt"
 	"os"
 	"os/exec"
@@ -100,21 +100,21 @@ func main() {
 
 	if show {
 		err = showTomatoes()
-	  if err != nil {
-	  	fmt.Printf("Error: %v\n", err)
-	  	os.Exit(1)
-	  }
+		if err != nil {
+			fmt.Printf("Error: %v\n", err)
+			os.Exit(1)
+		}
 		os.Exit(0)
 	}
 
 	for i := 1; ; i++ {
-	  err = task()
-	  if err != nil {
+		err = task()
+		if err != nil {
 			fmt.Printf("Error: %v\n", err)
 			os.Exit(1)
-	  }
+		}
 
-		if i % 4 == 0 {
+		if i%4 == 0 {
 			rest(longRestDuration)
 		} else {
 			rest(restDuration)
