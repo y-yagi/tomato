@@ -60,7 +60,7 @@ func createTomato(tag string) error {
 	return nil
 }
 
-func selectTomatos() ([]Tomato, error) {
+func selectTomatos(start time.Time, end time.Time) ([]Tomato, error) {
 	db, err := sqlx.Connect("sqlite3", DB)
 	if err != nil {
 		return nil, err
@@ -68,7 +68,7 @@ func selectTomatos() ([]Tomato, error) {
 	defer db.Close()
 
 	tomatoes := []Tomato{}
-	err = db.Select(&tomatoes, "SELECT id, tag, created_at FROM tomatoes ORDER BY created_at")
+	err = db.Select(&tomatoes, "SELECT id, tag, created_at FROM tomatoes WHERE created_at BETWEEN $1 AND $2 ORDER BY created_at ", start, end)
 	if err != nil {
 		return nil, err
 	}

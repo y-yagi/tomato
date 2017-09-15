@@ -6,10 +6,7 @@ import (
 	"fmt"
 	"os"
 	"os/exec"
-	"strconv"
 	"time"
-
-	"github.com/olekukonko/tablewriter"
 )
 
 // const duration = 1 * time.Minute
@@ -75,34 +72,12 @@ func rest(duration time.Duration) {
 	scanner.Scan()
 }
 
-func showTomatoes() error {
-	tomatoes, err := selectTomatos()
-	if err != nil {
-		return err
-	}
-
-	w := os.Stdout
-	table := tablewriter.NewWriter(w)
-	var values = []string{}
-
-	for i, tomato := range tomatoes {
-		values = append(values, strconv.Itoa(i+1))
-		values = append(values, tomato.Tag)
-		values = append(values, tomato.CreatedAt.Format("2006-01-02 15:04"))
-		table.Append(values)
-		values = nil
-	}
-
-	table.Render()
-	return nil
-}
-
 func main() {
 	const version = "0.1.0"
-	var show bool
+	var show string
 
 	flags := flag.NewFlagSet("goma", flag.ExitOnError)
-	flags.BoolVar(&show, "s", false, "Show your tomatoes.")
+	flags.StringVar(&show, "s", "", "Show your tomatoes. You can specify range, 'today'(default), 'week', 'month', 'all'.")
 	flags.Parse(os.Args[1:])
 
 	err := initDB()
@@ -111,8 +86,8 @@ func main() {
 		os.Exit(1)
 	}
 
-	if show {
-		err = showTomatoes()
+	if len(show) != 0 {
+		err = showTomatoes(show)
 		if err != nil {
 			fmt.Printf("Error: %v\n", err)
 			os.Exit(1)
