@@ -31,7 +31,7 @@ func countDown(target time.Time) {
 	}
 }
 
-func runTask() error {
+func run() error {
 	start := time.Now()
 	finish := start.Add(taskDuration)
 	fmt.Printf("Start task.\n")
@@ -80,7 +80,7 @@ func main() {
 	}
 
 	for i := 1; ; i++ {
-	  err = runTask()
+	  err = run()
 	  if err != nil {
 			fmt.Printf("Error: %v\n", err)
 			os.Exit(1)
