@@ -9,10 +9,9 @@ import (
 	"time"
 )
 
-// const duration = 1 * time.Minute
-const taskDuration = 5 * time.Second
-const restDuration = 3 * time.Second
-const longRestDuration = 5 * time.Second
+const taskDuration = 25 * time.Minute
+const restDuration = 5 * time.Minute
+const longRestDuration = 15 * time.Minute
 
 func formatMinutes(timeLeft time.Duration) string {
 	minutes := int(timeLeft.Minutes())
