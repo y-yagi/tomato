@@ -79,7 +79,7 @@ func showTomatoes() error {
 	}
 
 	for _, tomato := range tomatoes {
-		fmt.Printf("%v %v\n", tomato.Tag, tomato.CreatedAt)
+		fmt.Printf("%s %s\n", tomato.Tag, tomato.CreatedAt.Format("2006-01-02 15:04"))
 	}
 	return nil
 }
