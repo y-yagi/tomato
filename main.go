@@ -7,6 +7,8 @@ import (
 	"os"
 	"os/exec"
 	"time"
+	"strconv"
+	"github.com/olekukonko/tablewriter"
 )
 
 // const duration = 1 * time.Minute
@@ -78,9 +80,19 @@ func showTomatoes() error {
 		return err
 	}
 
-	for _, tomato := range tomatoes {
-		fmt.Printf("%s %s\n", tomato.Tag, tomato.CreatedAt.Format("2006-01-02 15:04"))
+	w := os.Stdout
+	table := tablewriter.NewWriter(w)
+	var values = []string{}
+
+	for i, tomato := range tomatoes {
+		values = append(values, strconv.Itoa(i + 1))
+		values = append(values, tomato.Tag)
+		values = append(values, tomato.CreatedAt.Format("2006-01-02 15:04"))
+		table.Append(values)
+		values =nil
 	}
+
+	table.Render()
 	return nil
 }
 
