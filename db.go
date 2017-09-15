@@ -17,7 +17,7 @@ CREATE TABLE tomatoes (
 `
 
 type Tomato struct {
-	FirstName string    `db:"first_name"`
+	Id				int `db:"id"`
 	Tag       string    `db:"tag"`
 	CreatedAt time.Time `db:"created_at"`
 }
@@ -58,4 +58,21 @@ func createTomato(tag string) error {
 	tx.Commit()
 
 	return nil
+}
+
+
+func selectTomatos() ([]Tomato, error) {
+	db, err := sqlx.Connect("sqlite3", DB)
+	if err != nil {
+		return nil, err
+	}
+	defer db.Close()
+
+	tomatoes := []Tomato{}
+	err = db.Select(&tomatoes, "SELECT id, tag, created_at FROM tomatoes ORDER BY created_at")
+	if err != nil {
+		return nil, err
+	}
+
+	return tomatoes, nil
 }

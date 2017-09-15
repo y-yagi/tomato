@@ -1,6 +1,7 @@
 package main
 
 import (
+	"flag"
 	"bufio"
 	"fmt"
 	"os"
@@ -31,7 +32,7 @@ func countDown(target time.Time) {
 	}
 }
 
-func run() error {
+func task() error {
 	start := time.Now()
 	finish := start.Add(taskDuration)
 	fmt.Printf("Start task.\n")
@@ -71,16 +72,43 @@ func rest(duration time.Duration) {
 	scanner.Scan()
 }
 
-func main() {
-	err := initDB()
+func showTomatoes() error {
+	tomatoes, err := selectTomatos()
+	if err != nil {
+		return err
+	}
 
+	for _, tomato := range tomatoes {
+		fmt.Printf("%v %v\n", tomato.Tag, tomato.CreatedAt)
+	}
+	return nil
+}
+
+func main() {
+	const version = "0.1.0"
+	var show bool
+
+	flags := flag.NewFlagSet("goma", flag.ExitOnError)
+	flags.BoolVar(&show, "s", false, "Show your tomatoes.")
+	flags.Parse(os.Args[1:])
+
+	err := initDB()
 	if err != nil {
 		fmt.Printf("Error: %v\n", err)
 		os.Exit(1)
 	}
 
+	if show {
+		err = showTomatoes()
+	  if err != nil {
+	  	fmt.Printf("Error: %v\n", err)
+	  	os.Exit(1)
+	  }
+		os.Exit(0)
+	}
+
 	for i := 1; ; i++ {
-	  err = run()
+	  err = task()
 	  if err != nil {
 			fmt.Printf("Error: %v\n", err)
 			os.Exit(1)
