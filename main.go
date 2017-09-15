@@ -6,8 +6,9 @@ import (
 	"fmt"
 	"os"
 	"os/exec"
-	"time"
 	"strconv"
+	"time"
+
 	"github.com/olekukonko/tablewriter"
 )
 
@@ -85,11 +86,11 @@ func showTomatoes() error {
 	var values = []string{}
 
 	for i, tomato := range tomatoes {
-		values = append(values, strconv.Itoa(i + 1))
+		values = append(values, strconv.Itoa(i+1))
 		values = append(values, tomato.Tag)
 		values = append(values, tomato.CreatedAt.Format("2006-01-02 15:04"))
 		table.Append(values)
-		values =nil
+		values = nil
 	}
 
 	table.Render()
