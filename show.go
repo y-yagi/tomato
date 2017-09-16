@@ -25,6 +25,7 @@ func showTodayTomatoes() error {
 
 	w := os.Stdout
 	table := tablewriter.NewWriter(w)
+	table.SetHeader([]string{"id", "Time", "Tag"})
 	var values = []string{}
 
 	for i, tomato := range tomatoes {
@@ -70,6 +71,7 @@ func showTomatoes(showRange string) error {
 
 	w := os.Stdout
 	table := tablewriter.NewWriter(w)
+	table.SetHeader([]string{"Count", "Tag"})
 	var values = []string{}
 
 	for _, tagSummary := range tagSummaries {
