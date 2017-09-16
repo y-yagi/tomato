@@ -8,6 +8,8 @@ import (
 	"os"
 	"os/exec"
 	"time"
+
+	"github.com/0xAX/notificator"
 )
 
 func formatMinutes(timeLeft time.Duration) string {
@@ -37,13 +39,16 @@ func countDown(outStream io.Writer, target time.Time) {
 	}
 }
 
-func task(outStream io.Writer) error {
+func task(outStream io.Writer, notify *notificator.Notificator) error {
 	start := time.Now()
 	finish := start.Add(taskDuration)
 	fmt.Fprint(outStream, "Start task.\n")
 
 	countDown(outStream, finish)
 
+	if notify != nil {
+		notify.Push("Goma", "Pomodoro finished!", "", notificator.UR_CRITICAL)
+	}
 	_ = exec.Command("mpg123", "data/ringing.mp3").Start()
 
 	scanner := bufio.NewScanner(os.Stdin)
@@ -63,13 +68,16 @@ func task(outStream io.Writer) error {
 	return nil
 }
 
-func rest(outStream io.Writer, duration time.Duration) {
+func rest(outStream io.Writer, notify *notificator.Notificator, duration time.Duration) {
 	start := time.Now()
 	finish := start.Add(duration)
 	fmt.Fprintf(outStream, "\nStart rest.\n")
 
 	countDown(outStream, finish)
 
+	if notify != nil {
+		notify.Push("Goma", "Break is over!", "", notificator.UR_CRITICAL)
+	}
 	_ = exec.Command("mpg123", "data/ringing.mp3").Start()
 
 	scanner := bufio.NewScanner(os.Stdin)
@@ -79,7 +87,6 @@ func rest(outStream io.Writer, duration time.Duration) {
 
 func run(args []string, outStream, errStream io.Writer) int {
 	var show string
-
 	flags := flag.NewFlagSet("goma", flag.ExitOnError)
 	flags.SetOutput(errStream)
 	flags.StringVar(&show, "s", "", "Show your tomatoes. You can specify range, 'today', 'week', 'month' or 'all'.")
@@ -90,6 +97,10 @@ func run(args []string, outStream, errStream io.Writer) int {
 		fmt.Fprintf(outStream, "Error: %v\n", err)
 		return 1
 	}
+
+	notify := notificator.New(notificator.Options{
+		AppName: "Goma",
+	})
 
 	if len(show) != 0 {
 		if !contains([]string{"today", "week", "month", "all"}, show) {
@@ -106,16 +117,16 @@ func run(args []string, outStream, errStream io.Writer) int {
 	}
 
 	for i := 1; ; i++ {
-		err = task(outStream)
+		err = task(outStream, notify)
 		if err != nil {
 			fmt.Fprintf(outStream, "Error: %v\n", err)
 			return 1
 		}
 
 		if i%4 == 0 {
-			rest(outStream, longRestDuration)
+			rest(outStream, notify, longRestDuration)
 		} else {
-			rest(outStream, restDuration)
+			rest(outStream, notify, restDuration)
 		}
 	}
 }
