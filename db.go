@@ -25,12 +25,16 @@ SELECT COUNT(tag) as tag_count, tag FROM tomatoes WHERE created_at BETWEEN $1 AN
 	GROUP BY tag ORDER BY tag_count DESC
 `
 
+var dbFile = "goma.db"
+
+// Tomato is type for `tomatoes` table
 type Tomato struct {
-	Id        int       `db:"id"`
+	ID        int       `db:"id"`
 	Tag       string    `db:"tag"`
 	CreatedAt time.Time `db:"created_at"`
 }
 
+// TagSummary is type for count per tag
 type TagSummary struct {
 	Count int    `db:"tag_count"`
 	Tag   string `db:"tag"`
@@ -41,15 +45,12 @@ func isExist(filename string) bool {
 	return err == nil
 }
 
-// TODO: file name get from config
-const DB = "goma.db"
-
 func initDB() error {
-	if isExist(DB) {
+	if isExist(dbFile) {
 		return nil
 	}
 
-	db, err := sqlx.Connect("sqlite3", DB)
+	db, err := sqlx.Connect("sqlite3", dbFile)
 	if err != nil {
 		return err
 	}
@@ -61,7 +62,7 @@ func initDB() error {
 }
 
 func createTomato(tag string) error {
-	db, err := sqlx.Connect("sqlite3", DB)
+	db, err := sqlx.Connect("sqlite3", dbFile)
 	if err != nil {
 		return err
 	}
@@ -75,7 +76,7 @@ func createTomato(tag string) error {
 }
 
 func selectTomatos(start time.Time, end time.Time) ([]Tomato, error) {
-	db, err := sqlx.Connect("sqlite3", DB)
+	db, err := sqlx.Connect("sqlite3", dbFile)
 	if err != nil {
 		return nil, err
 	}
@@ -91,7 +92,7 @@ func selectTomatos(start time.Time, end time.Time) ([]Tomato, error) {
 }
 
 func selectTagSummary(start time.Time, end time.Time) ([]TagSummary, error) {
-	db, err := sqlx.Connect("sqlite3", DB)
+	db, err := sqlx.Connect("sqlite3", dbFile)
 	if err != nil {
 		return nil, err
 	}
