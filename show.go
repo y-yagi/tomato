@@ -2,7 +2,7 @@ package main
 
 import (
 	"fmt"
-	"os"
+	"io"
 	"strconv"
 	"time"
 
@@ -12,19 +12,18 @@ import (
 
 var nothingMsg = "Tomato is nothing (=･x･=)\n"
 
-func showTodayTomatoes() error {
+func showTodayTomatoes(outStream io.Writer) error {
 	tomatoes, err := selectTomatos(now.BeginningOfDay(), now.EndOfDay())
 	if err != nil {
 		return err
 	}
 
 	if len(tomatoes) == 0 {
-		fmt.Fprintf(os.Stdout, nothingMsg)
+		fmt.Fprintf(outStream, nothingMsg)
 		return nil
 	}
 
-	w := os.Stdout
-	table := tablewriter.NewWriter(w)
+	table := tablewriter.NewWriter(outStream)
 	table.SetHeader([]string{"id", "Time", "Tag"})
 	var values = []string{}
 
@@ -37,16 +36,16 @@ func showTodayTomatoes() error {
 	}
 
 	table.Render()
-	return nil
 
+	return nil
 }
 
-func showTomatoes(showRange string) error {
+func showTomatoes(outStream io.Writer, showRange string) error {
 	var start time.Time
 	var end time.Time
 
 	if showRange == "today" {
-		return showTodayTomatoes()
+		return showTodayTomatoes(outStream)
 	}
 
 	if showRange == "all" {
@@ -65,12 +64,11 @@ func showTomatoes(showRange string) error {
 	}
 
 	if len(tagSummaries) == 0 {
-		fmt.Fprintf(os.Stdout, nothingMsg)
+		fmt.Fprintf(outStream, nothingMsg)
 		return nil
 	}
 
-	w := os.Stdout
-	table := tablewriter.NewWriter(w)
+	table := tablewriter.NewWriter(outStream)
 	table.SetHeader([]string{"Count", "Tag"})
 	var values = []string{}
 
@@ -82,5 +80,6 @@ func showTomatoes(showRange string) error {
 	}
 
 	table.Render()
+
 	return nil
 }

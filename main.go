@@ -29,29 +29,29 @@ func contains(s []string, e string) bool {
 	return false
 }
 
-func countDown(target time.Time) {
+func countDown(outStream io.Writer, target time.Time) {
 	for range time.Tick(100 * time.Millisecond) {
 		timeLeft := -time.Since(target)
 		if timeLeft < 0 {
-			fmt.Print("Countdown: ", formatMinutes(0), "   \r")
+			fmt.Fprint(outStream, "Countdown: ", formatMinutes(0), "   \r")
 			return
 		}
-		fmt.Fprint(os.Stdout, "Countdown: ", formatMinutes(timeLeft), "   \r")
+		fmt.Fprint(outStream, "Countdown: ", formatMinutes(timeLeft), "   \r")
 		os.Stdout.Sync()
 	}
 }
 
-func task() error {
+func task(outStream io.Writer) error {
 	start := time.Now()
 	finish := start.Add(taskDuration)
-	fmt.Printf("Start task.\n")
+	fmt.Fprint(outStream, "Start task.\n")
 
-	countDown(finish)
+	countDown(outStream, finish)
 
 	_ = exec.Command("mpg123", "data/ringing.mp3").Start()
 
 	scanner := bufio.NewScanner(os.Stdin)
-	fmt.Print("\nTag: ")
+	fmt.Fprint(outStream, "\nTag: ")
 
 	if !scanner.Scan() {
 		return nil
@@ -67,17 +67,17 @@ func task() error {
 	return nil
 }
 
-func rest(duration time.Duration) {
+func rest(outStream io.Writer, duration time.Duration) {
 	start := time.Now()
 	finish := start.Add(duration)
-	fmt.Printf("\nStart rest.\n")
+	fmt.Fprintf(outStream, "\nStart rest.\n")
 
-	countDown(finish)
+	countDown(outStream, finish)
 
 	_ = exec.Command("mpg123", "data/ringing.mp3").Start()
 
 	scanner := bufio.NewScanner(os.Stdin)
-	fmt.Print("\nPlease press the Enter key for start next tomato.\n")
+	fmt.Fprint(outStream, "\nPlease press the Enter key for start next tomato.\n")
 	scanner.Scan()
 }
 
@@ -91,7 +91,7 @@ func run(args []string, outStream, errStream io.Writer) int {
 
 	err := initDB()
 	if err != nil {
-		fmt.Printf("Error: %v\n", err)
+		fmt.Fprintf(outStream, "Error: %v\n", err)
 		return 1
 	}
 
@@ -101,25 +101,25 @@ func run(args []string, outStream, errStream io.Writer) int {
 			return 1
 		}
 
-		err = showTomatoes(show)
+		err = showTomatoes(outStream, show)
 		if err != nil {
-			fmt.Printf("Error: %v\n", err)
+			fmt.Fprintf(outStream, "Error: %v\n", err)
 			return 1
 		}
 		return 0
 	}
 
 	for i := 1; ; i++ {
-		err = task()
+		err = task(outStream)
 		if err != nil {
-			fmt.Printf("Error: %v\n", err)
+			fmt.Fprintf(outStream, "Error: %v\n", err)
 			return 1
 		}
 
 		if i%4 == 0 {
-			rest(longRestDuration)
+			rest(outStream, longRestDuration)
 		} else {
-			rest(restDuration)
+			rest(outStream, restDuration)
 		}
 	}
 }
