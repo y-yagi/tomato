@@ -19,6 +19,15 @@ func formatMinutes(timeLeft time.Duration) string {
 	return fmt.Sprintf("%d:%02d", minutes, seconds)
 }
 
+func contains(s []string, e string) bool {
+	for _, v := range s {
+		if e == v {
+			return true
+		}
+	}
+	return false
+}
+
 func countDown(target time.Time) {
 	for range time.Tick(100 * time.Millisecond) {
 		timeLeft := -time.Since(target)
@@ -76,7 +85,7 @@ func main() {
 	var show string
 
 	flags := flag.NewFlagSet("goma", flag.ExitOnError)
-	flags.StringVar(&show, "s", "", "Show your tomatoes. You can specify range, 'today', 'week', 'month', 'all'.")
+	flags.StringVar(&show, "s", "", "Show your tomatoes. You can specify range, 'today', 'week', 'month' or 'all'.")
 	flags.Parse(os.Args[1:])
 
 	err := initDB()
@@ -86,6 +95,11 @@ func main() {
 	}
 
 	if len(show) != 0 {
+		if !contains([]string{"today", "week", "month", "all"}, show) {
+			fmt.Printf("'%s' is invalid argument. Please specify 'today', 'week', 'month' or 'all'.\n", show)
+			os.Exit(1)
+		}
+
 		err = showTomatoes(show)
 		if err != nil {
 			fmt.Printf("Error: %v\n", err)
