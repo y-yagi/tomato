@@ -10,10 +10,6 @@ import (
 	"time"
 )
 
-const taskDuration = 25 * time.Minute
-const restDuration = 5 * time.Minute
-const longRestDuration = 15 * time.Minute
-
 func formatMinutes(timeLeft time.Duration) string {
 	minutes := int(timeLeft.Minutes())
 	seconds := int(timeLeft.Seconds()) % 60
