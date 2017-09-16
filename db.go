@@ -21,7 +21,7 @@ SELECT id, tag, created_at FROM tomatoes WHERE created_at BETWEEN $1 AND $2 ORDE
 `
 
 var tagSummaryQuery = `
-SELECT COUNT(tag) as tag_count, tag FROM tomatoes WHERE tag != "" AND created_at BETWEEN $1 AND $2
+SELECT COUNT(tag) as tag_count, tag FROM tomatoes WHERE created_at BETWEEN $1 AND $2
 	GROUP BY tag ORDER BY tag_count DESC
 `
 

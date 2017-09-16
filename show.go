@@ -41,12 +41,22 @@ func showTodayTomatoes() error {
 }
 
 func showTomatoes(showRange string) error {
+	var start time.Time
+	var end time.Time
+
 	if showRange == "today" {
 		return showTodayTomatoes()
 	}
 
-	start := time.Date(2000, 01, 01, 00, 00, 00, 0, time.Now().Location())
-	end := time.Now()
+	if showRange == "all" {
+		start = time.Date(2000, 01, 01, 00, 00, 00, 0, time.Now().Location())
+	} else if showRange == "week" {
+		start = now.BeginningOfWeek()
+	} else if showRange == "mohth" {
+		start = now.BeginningOfMonth()
+	}
+
+	end = time.Now()
 
 	tagSummaries, err := selectTagSummary(start, end)
 	if err != nil {
