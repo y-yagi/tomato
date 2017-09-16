@@ -24,7 +24,7 @@ func showTodayTomatoes(outStream io.Writer) error {
 	}
 
 	table := tablewriter.NewWriter(outStream)
-	table.SetHeader([]string{"id", "Time", "Tag"})
+	table.SetHeader([]string{"id", "Created", "Tag"})
 	var values = []string{}
 
 	for i, tomato := range tomatoes {
