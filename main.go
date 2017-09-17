@@ -47,7 +47,7 @@ func task(outStream io.Writer, notify *notificator.Notificator) error {
 	countDown(outStream, finish)
 
 	if notify != nil {
-		notify.Push("Goma", "Pomodoro finished!", "", notificator.UR_CRITICAL)
+		notify.Push("Tomato", "Pomodoro finished!", "", notificator.UR_CRITICAL)
 	}
 	_ = exec.Command("mpg123", "data/ringing.mp3").Start()
 
@@ -76,7 +76,7 @@ func rest(outStream io.Writer, notify *notificator.Notificator, duration time.Du
 	countDown(outStream, finish)
 
 	if notify != nil {
-		notify.Push("Goma", "Break is over!", "", notificator.UR_CRITICAL)
+		notify.Push("Tomato", "Break is over!", "", notificator.UR_CRITICAL)
 	}
 	_ = exec.Command("mpg123", "data/ringing.mp3").Start()
 
@@ -87,7 +87,7 @@ func rest(outStream io.Writer, notify *notificator.Notificator, duration time.Du
 
 func run(args []string, outStream, errStream io.Writer) int {
 	var show string
-	flags := flag.NewFlagSet("goma", flag.ExitOnError)
+	flags := flag.NewFlagSet("tomato", flag.ExitOnError)
 	flags.SetOutput(errStream)
 	flags.StringVar(&show, "s", "", "Show your tomatoes. You can specify range, 'today', 'week', 'month' or 'all'.")
 	flags.Parse(args[1:])
@@ -99,7 +99,7 @@ func run(args []string, outStream, errStream io.Writer) int {
 	}
 
 	notify := notificator.New(notificator.Options{
-		AppName: "Goma",
+		AppName: "Tomato",
 	})
 
 	if len(show) != 0 {

@@ -25,7 +25,7 @@ SELECT COUNT(tag) as tag_count, tag FROM tomatoes WHERE created_at BETWEEN $1 AN
 	GROUP BY tag ORDER BY tag_count DESC
 `
 
-var dbFile = "goma.db"
+var dbFile = "tomato.db"
 
 // Tomato is type for `tomatoes` table
 type Tomato struct {
