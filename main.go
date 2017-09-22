@@ -10,7 +10,14 @@ import (
 	"time"
 
 	"github.com/0xAX/notificator"
+	"github.com/y-yagi/configure"
 )
+
+type config struct {
+	DataBase string `toml:"database"`
+}
+
+var cfg config
 
 func formatMinutes(timeLeft time.Duration) string {
 	minutes := int(timeLeft.Minutes())
@@ -63,7 +70,7 @@ func task(outStream io.Writer, notify *notificator.Notificator) error {
 	}
 
 	tag := scanner.Text()
-	createTomato(tag)
+	createTomato(tag, cfg.DataBase)
 
 	return nil
 }
@@ -92,7 +99,13 @@ func run(args []string, outStream, errStream io.Writer) int {
 	flags.StringVar(&show, "s", "", "Show your tomatoes. You can specify range, 'today', 'week', 'month' or 'all'.")
 	flags.Parse(args[1:])
 
-	err := initDB()
+	err := configure.Load("tomato", &cfg)
+	if err != nil {
+		fmt.Fprintf(outStream, "Error: %v\n", err)
+		return 1
+	}
+
+	err = initDB(cfg.DataBase)
 	if err != nil {
 		fmt.Fprintf(outStream, "Error: %v\n", err)
 		return 1
@@ -108,7 +121,7 @@ func run(args []string, outStream, errStream io.Writer) int {
 			return 1
 		}
 
-		err = showTomatoes(outStream, show)
+		err = showTomatoes(outStream, cfg.DataBase, show)
 		if err != nil {
 			fmt.Fprintf(outStream, "Error: %v\n", err)
 			return 1
