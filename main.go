@@ -46,7 +46,7 @@ func countDown(outStream io.Writer, target time.Time) {
 	}
 }
 
-func task(outStream io.Writer, database string, notify *notificator.Notificator) error {
+func task(outStream io.Writer, notify *notificator.Notificator) error {
 	start := time.Now()
 	finish := start.Add(taskDuration)
 	fmt.Fprint(outStream, "Start task.\n")
@@ -70,7 +70,7 @@ func task(outStream io.Writer, database string, notify *notificator.Notificator)
 	}
 
 	tag := scanner.Text()
-	createTomato(database, tag)
+	createTomato(tag)
 
 	return nil
 }
@@ -94,6 +94,7 @@ func rest(outStream io.Writer, notify *notificator.Notificator, duration time.Du
 
 func run(args []string, outStream, errStream io.Writer) int {
 	var show string
+
 	flags := flag.NewFlagSet("tomato", flag.ExitOnError)
 	flags.SetOutput(errStream)
 	flags.StringVar(&show, "s", "", "Show your tomatoes. You can specify range, 'today', 'week', 'month' or 'all'.")
@@ -105,7 +106,7 @@ func run(args []string, outStream, errStream io.Writer) int {
 		return 1
 	}
 
-	err = initDB(cfg.DataBase)
+	err = initDB()
 	if err != nil {
 		fmt.Fprintf(outStream, "Error: %v\n", err)
 		return 1
@@ -121,7 +122,7 @@ func run(args []string, outStream, errStream io.Writer) int {
 			return 1
 		}
 
-		err = showTomatoes(outStream, cfg.DataBase, show)
+		err = showTomatoes(outStream, show)
 		if err != nil {
 			fmt.Fprintf(outStream, "Error: %v\n", err)
 			return 1
@@ -130,7 +131,7 @@ func run(args []string, outStream, errStream io.Writer) int {
 	}
 
 	for i := 1; ; i++ {
-		err = task(outStream, cfg.DataBase, notify)
+		err = task(outStream, notify)
 		if err != nil {
 			fmt.Fprintf(outStream, "Error: %v\n", err)
 			return 1

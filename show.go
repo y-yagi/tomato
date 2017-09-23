@@ -12,8 +12,8 @@ import (
 
 var nothingMsg = "Tomato is nothing (=･x･=)\n"
 
-func showTodayTomatoes(outStream io.Writer, database string) error {
-	tomatoes, err := selectTomatos(database, now.BeginningOfDay(), now.EndOfDay())
+func showTodayTomatoes(outStream io.Writer) error {
+	tomatoes, err := selectTomatos(now.BeginningOfDay(), now.EndOfDay())
 	if err != nil {
 		return err
 	}
@@ -40,12 +40,12 @@ func showTodayTomatoes(outStream io.Writer, database string) error {
 	return nil
 }
 
-func showTomatoes(outStream io.Writer, database string, showRange string) error {
+func showTomatoes(outStream io.Writer, showRange string) error {
 	var start time.Time
 	var end time.Time
 
 	if showRange == "today" {
-		return showTodayTomatoes(outStream, database)
+		return showTodayTomatoes(outStream)
 	}
 
 	if showRange == "all" {
@@ -58,7 +58,7 @@ func showTomatoes(outStream io.Writer, database string, showRange string) error 
 
 	end = time.Now()
 
-	tagSummaries, err := selectTagSummary(database, start, end)
+	tagSummaries, err := selectTagSummary(start, end)
 	if err != nil {
 		return err
 	}

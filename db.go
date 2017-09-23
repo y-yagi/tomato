@@ -43,12 +43,12 @@ func isExist(filename string) bool {
 	return err == nil
 }
 
-func initDB(database string) error {
-	if isExist(database) {
+func initDB() error {
+	if isExist(cfg.DataBase) {
 		return nil
 	}
 
-	db, err := sqlx.Connect("sqlite3", database)
+	db, err := sqlx.Connect("sqlite3", cfg.DataBase)
 	if err != nil {
 		return err
 	}
@@ -59,8 +59,8 @@ func initDB(database string) error {
 	return nil
 }
 
-func createTomato(database, tag string) error {
-	db, err := sqlx.Connect("sqlite3", database)
+func createTomato(tag string) error {
+	db, err := sqlx.Connect("sqlite3", cfg.DataBase)
 	if err != nil {
 		return err
 	}
@@ -73,8 +73,8 @@ func createTomato(database, tag string) error {
 	return nil
 }
 
-func selectTomatos(database string, start time.Time, end time.Time) ([]Tomato, error) {
-	db, err := sqlx.Connect("sqlite3", database)
+func selectTomatos(start time.Time, end time.Time) ([]Tomato, error) {
+	db, err := sqlx.Connect("sqlite3", cfg.DataBase)
 	if err != nil {
 		return nil, err
 	}
@@ -89,8 +89,8 @@ func selectTomatos(database string, start time.Time, end time.Time) ([]Tomato, e
 	return tomatoes, nil
 }
 
-func selectTagSummary(database string, start time.Time, end time.Time) ([]TagSummary, error) {
-	db, err := sqlx.Connect("sqlite3", database)
+func selectTagSummary(start time.Time, end time.Time) ([]TagSummary, error) {
+	db, err := sqlx.Connect("sqlite3", cfg.DataBase)
 	if err != nil {
 		return nil, err
 	}
