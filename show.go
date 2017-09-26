@@ -44,10 +44,6 @@ func showTomatoes(outStream io.Writer, showRange string) error {
 	var start time.Time
 	var end time.Time
 
-	if showRange == "today" {
-		return showTodayTomatoes(outStream)
-	}
-
 	if showRange == "all" {
 		start = time.Date(2000, 01, 01, 00, 00, 00, 0, time.Now().Location())
 	} else if showRange == "week" {
