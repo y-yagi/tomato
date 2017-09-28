@@ -5,8 +5,10 @@ import (
 	"flag"
 	"fmt"
 	"io"
+	"io/ioutil"
 	"os"
 	"os/exec"
+	"path/filepath"
 	"time"
 
 	"github.com/0xAX/notificator"
@@ -18,6 +20,11 @@ type config struct {
 }
 
 var cfg config
+
+func isExist(filename string) bool {
+	_, err := os.Stat(filename)
+	return err == nil
+}
 
 func formatMinutes(timeLeft time.Duration) string {
 	minutes := int(timeLeft.Minutes())
@@ -56,7 +63,9 @@ func task(outStream io.Writer, notify *notificator.Notificator) error {
 	if notify != nil {
 		notify.Push("Tomato", "Pomodoro finished!", "", notificator.UR_CRITICAL)
 	}
-	_ = exec.Command("mpg123", "data/ringing.mp3").Start()
+
+	finishSound := filepath.Join(configure.ConfigDir("tomato"), "ringing.mp3")
+	_ = exec.Command("mpg123", finishSound).Start()
 
 	scanner := bufio.NewScanner(os.Stdin)
 	fmt.Fprint(outStream, "\nTag: ")
@@ -94,23 +103,12 @@ func rest(outStream io.Writer, notify *notificator.Notificator, duration time.Du
 
 func run(args []string, outStream, errStream io.Writer) int {
 	var show string
+	var err error
 
 	flags := flag.NewFlagSet("tomato", flag.ExitOnError)
 	flags.SetOutput(errStream)
 	flags.StringVar(&show, "s", "", "Show your tomatoes. You can specify range, 'today', 'week', 'month' or 'all'.")
 	flags.Parse(args[1:])
-
-	err := configure.Load("tomato", &cfg)
-	if err != nil {
-		fmt.Fprintf(outStream, "Error: %v\n", err)
-		return 1
-	}
-
-	err = initDB()
-	if err != nil {
-		fmt.Fprintf(outStream, "Error: %v\n", err)
-		return 1
-	}
 
 	notify := notificator.New(notificator.Options{
 		AppName: "Tomato",
@@ -150,6 +148,32 @@ func run(args []string, outStream, errStream io.Writer) int {
 	}
 }
 
+func prepare() {
+	err := configure.Load("tomato", &cfg)
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Error: %v\n", err)
+		os.Exit(1)
+	}
+
+	err = initDB()
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Error: %v\n", err)
+		os.Exit(1)
+	}
+
+	finishSound := filepath.Join(configure.ConfigDir("tomato"), "ringing.mp3")
+	if !isExist(finishSound) {
+		err := ioutil.WriteFile(finishSound, Assets.Files["/ringing.mp3"].Data, 0755)
+		if err != nil {
+			fmt.Fprintf(os.Stderr, "Error: %v\n", err)
+			os.Exit(1)
+		}
+	}
+}
+
+// go:generate go-assets-builder -s="/data" -o bindata.go data
+
 func main() {
+	prepare()
 	os.Exit(run(os.Args, os.Stdout, os.Stderr))
 }

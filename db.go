@@ -1,7 +1,6 @@
 package main
 
 import (
-	"os"
 	"time"
 
 	"github.com/jmoiron/sqlx"
@@ -36,11 +35,6 @@ type Tomato struct {
 type TagSummary struct {
 	Count int    `db:"tag_count"`
 	Tag   string `db:"tag"`
-}
-
-func isExist(filename string) bool {
-	_, err := os.Stat(filename)
-	return err == nil
 }
 
 func initDB() error {
