@@ -20,25 +20,12 @@ type config struct {
 }
 
 var cfg config
-
-func isExist(filename string) bool {
-	_, err := os.Stat(filename)
-	return err == nil
-}
+var finishSound string
 
 func formatMinutes(timeLeft time.Duration) string {
 	minutes := int(timeLeft.Minutes())
 	seconds := int(timeLeft.Seconds()) % 60
 	return fmt.Sprintf("%d:%02d", minutes, seconds)
-}
-
-func contains(s []string, e string) bool {
-	for _, v := range s {
-		if e == v {
-			return true
-		}
-	}
-	return false
 }
 
 func countDown(outStream io.Writer, target time.Time) {
@@ -64,7 +51,6 @@ func task(outStream io.Writer, notify *notificator.Notificator) error {
 		notify.Push("Tomato", "Pomodoro finished!", "", notificator.UR_CRITICAL)
 	}
 
-	finishSound := filepath.Join(configure.ConfigDir("tomato"), "ringing.mp3")
 	_ = exec.Command("mpg123", finishSound).Start()
 
 	scanner := bufio.NewScanner(os.Stdin)
@@ -148,7 +134,7 @@ func run(args []string, outStream, errStream io.Writer) int {
 	}
 }
 
-func prepare() {
+func init() {
 	err := configure.Load("tomato", &cfg)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Error: %v\n", err)
@@ -161,7 +147,7 @@ func prepare() {
 		os.Exit(1)
 	}
 
-	finishSound := filepath.Join(configure.ConfigDir("tomato"), "ringing.mp3")
+	finishSound = filepath.Join(configure.ConfigDir("tomato"), "ringing.mp3")
 	if !isExist(finishSound) {
 		err := ioutil.WriteFile(finishSound, Assets.Files["/ringing.mp3"].Data, 0755)
 		if err != nil {
@@ -174,6 +160,5 @@ func prepare() {
 // go:generate go-assets-builder -s="/data" -o bindata.go data
 
 func main() {
-	prepare()
 	os.Exit(run(os.Args, os.Stdout, os.Stderr))
 }
