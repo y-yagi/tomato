@@ -7,7 +7,8 @@ import (
 	_ "github.com/mattn/go-sqlite3"
 )
 
-var schema = `
+var (
+	schema = `
 CREATE TABLE tomatoes (
 	id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
 	tag varchar,
@@ -15,14 +16,15 @@ CREATE TABLE tomatoes (
 );
 `
 
-var selectQuery = `
+	selectQuery = `
 SELECT id, tag, created_at FROM tomatoes WHERE created_at BETWEEN $1 AND $2 ORDER BY created_at
 `
 
-var tagSummaryQuery = `
+	tagSummaryQuery = `
 SELECT COUNT(tag) as tag_count, tag FROM tomatoes WHERE created_at BETWEEN $1 AND $2
 	GROUP BY tag ORDER BY tag_count DESC
 `
+)
 
 // Tomato is type for `tomatoes` table
 type Tomato struct {

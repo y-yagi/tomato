@@ -19,8 +19,10 @@ type config struct {
 	DataBase string `toml:"database"`
 }
 
-var cfg config
-var finishSound string
+var (
+	cfg         config
+	finishSound string
+)
 
 func formatMinutes(timeLeft time.Duration) string {
 	minutes := int(timeLeft.Minutes())
