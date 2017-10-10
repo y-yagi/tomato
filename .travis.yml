@@ -12,3 +12,6 @@ install:
 before_script:
   - go vet
   - golint
+
+script:
+  - go test -v
