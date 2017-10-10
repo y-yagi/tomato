@@ -7,6 +7,6 @@ go:
 install:
   - go get -u github.com/golang/lint/golint
 
-script:
+before_script:
   - go vet
   - golint
