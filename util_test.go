@@ -1,6 +1,23 @@
 package main
 
-import "testing"
+import (
+	"os"
+	"testing"
+)
+
+func TestIsExit(t *testing.T) {
+	pwd, _ := os.Getwd()
+
+	file := pwd + "/util_test.go"
+	if !isExist(file) {
+		t.Errorf("Expect isExist returns true but false. file: %s", file)
+	}
+
+	file = pwd + "/unexist.go"
+	if isExist(file) {
+		t.Errorf("Expect isExist returns false but true. file: %s", file)
+	}
+}
 
 func TestContains(t *testing.T) {
 	value := "today"
