@@ -89,7 +89,7 @@ func rest(outStream io.Writer, notify *notificator.Notificator, duration time.Du
 	scanner.Scan()
 }
 
-func run(args []string, outStream, errStream io.Writer) int {
+func run(args []string, outStream, errStream io.Writer) (exitCode int) {
 	var show string
 	var err error
 
@@ -101,11 +101,13 @@ func run(args []string, outStream, errStream io.Writer) int {
 	notify := notificator.New(notificator.Options{
 		AppName: "Tomato",
 	})
+	exitCode = 0
 
 	if len(show) != 0 {
 		if !contains([]string{"today", "week", "month", "all"}, show) {
 			fmt.Printf("'%s' is invalid argument. Please specify 'today', 'week', 'month' or 'all'.\n", show)
-			return 1
+			exitCode = 1
+			return
 		}
 
 		if show == "today" {
@@ -116,16 +118,18 @@ func run(args []string, outStream, errStream io.Writer) int {
 
 		if err != nil {
 			fmt.Fprintf(outStream, "Error: %v\n", err)
-			return 1
+			exitCode = 1
+			return
 		}
-		return 0
+		return
 	}
 
 	for i := 1; ; i++ {
 		err = task(outStream, notify)
 		if err != nil {
 			fmt.Fprintf(outStream, "Error: %v\n", err)
-			return 1
+			exitCode = 1
+			return
 		}
 
 		if i%4 == 0 {
