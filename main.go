@@ -91,17 +91,34 @@ func rest(outStream io.Writer, notify *notificator.Notificator, duration time.Du
 
 func run(args []string, outStream, errStream io.Writer) (exitCode int) {
 	var show string
+	var edit bool
 	var err error
 
 	flags := flag.NewFlagSet("tomato", flag.ExitOnError)
 	flags.SetOutput(errStream)
 	flags.StringVar(&show, "s", "", "Show your tomatoes. You can specify range, 'today', 'week', 'month' or 'all'.")
+	flags.BoolVar(&edit, "e", false, "Edit config.")
 	flags.Parse(args[1:])
 
 	notify := notificator.New(notificator.Options{
 		AppName: "Tomato",
 	})
 	exitCode = 0
+
+	if edit {
+		editor := os.Getenv("EDITOR")
+		if len(editor) == 0 {
+			editor = "vim"
+		}
+
+		if err := configure.Edit("tomato", editor); err != nil {
+			fmt.Fprintf(outStream, "Error: %v\n", err)
+			exitCode = 1
+			return
+		}
+
+		return
+	}
 
 	if len(show) != 0 {
 		if !contains([]string{"today", "week", "month", "all"}, show) {
