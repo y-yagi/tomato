@@ -53,7 +53,7 @@
   branch = "master"
   name = "github.com/y-yagi/configure"
   packages = ["."]
-  revision = "8a86791c54281b3368e926113f43767e86446c25"
+  revision = "65ccf933d7a324eb475f89a15079f82dedb1bb78"
 
 [[projects]]
   branch = "master"
