@@ -12,6 +12,7 @@ import (
 	"time"
 
 	"github.com/0xAX/notificator"
+	tm "github.com/buger/goterm"
 	"github.com/y-yagi/configure"
 )
 
@@ -31,21 +32,22 @@ func formatMinutes(timeLeft time.Duration) string {
 }
 
 func countDown(outStream io.Writer, target time.Time) {
+	tm.Clear()
 	for range time.Tick(100 * time.Millisecond) {
+		tm.MoveCursor(1, 1)
 		timeLeft := -time.Since(target)
 		if timeLeft < 0 {
-			fmt.Fprint(outStream, "Countdown: ", formatMinutes(0), "   \r")
+			tm.Print("Countdown: ", formatMinutes(0), "   \r")
 			return
 		}
-		fmt.Fprint(outStream, "Countdown: ", formatMinutes(timeLeft), "   \r")
-		os.Stdout.Sync()
+		tm.Print("Countdown: ", formatMinutes(timeLeft), "   \r")
+		tm.Flush()
 	}
 }
 
 func task(outStream io.Writer, notify *notificator.Notificator) error {
 	start := time.Now()
 	finish := start.Add(taskDuration)
-	fmt.Fprint(outStream, "Start task.\n")
 
 	countDown(outStream, finish)
 
