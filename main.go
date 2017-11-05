@@ -9,6 +9,7 @@ import (
 	"os"
 	"os/exec"
 	"path/filepath"
+	"regexp"
 	"time"
 
 	"github.com/0xAX/notificator"
@@ -22,7 +23,12 @@ type config struct {
 var (
 	cfg         config
 	finishSound string
+	blank_re    = regexp.MustCompile("\\A[[:space:]]*\\z")
 )
+
+func isBlank(str string) bool {
+	return len(str) == 0 || blank_re.MatchString(str)
+}
 
 func formatMinutes(timeLeft time.Duration) string {
 	minutes := int(timeLeft.Minutes())
@@ -43,6 +49,8 @@ func countDown(outStream io.Writer, target time.Time) {
 }
 
 func task(outStream io.Writer, notify *notificator.Notificator) error {
+	var tag string
+
 	start := time.Now()
 	finish := start.Add(taskDuration)
 	fmt.Fprint(outStream, "Start task.\n")
@@ -58,15 +66,23 @@ func task(outStream io.Writer, notify *notificator.Notificator) error {
 	scanner := bufio.NewScanner(os.Stdin)
 	fmt.Fprint(outStream, "\nTag: ")
 
-	if !scanner.Scan() {
-		return nil
+	for {
+		if !scanner.Scan() {
+			return nil
+		}
+
+		if scanner.Err() != nil {
+			return scanner.Err()
+		}
+
+		tag = scanner.Text()
+
+		if !isBlank(tag) {
+			break
+		}
+		fmt.Fprint(outStream, "Please input non empty value\nTag: ")
 	}
 
-	if scanner.Err() != nil {
-		return scanner.Err()
-	}
-
-	tag := scanner.Text()
 	createTomato(tag)
 
 	return nil
