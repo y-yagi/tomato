@@ -9,7 +9,6 @@ import (
 	"os"
 	"os/exec"
 	"path/filepath"
-	"regexp"
 	"time"
 
 	"github.com/0xAX/notificator"
@@ -23,12 +22,7 @@ type config struct {
 var (
 	cfg         config
 	finishSound string
-	blank_re    = regexp.MustCompile("\\A[[:space:]]*\\z")
 )
-
-func isBlank(str string) bool {
-	return len(str) == 0 || blank_re.MatchString(str)
-}
 
 func formatMinutes(timeLeft time.Duration) string {
 	minutes := int(timeLeft.Minutes())
