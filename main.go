@@ -86,7 +86,7 @@ func task(outStream io.Writer, notify *notificator.Notificator) error {
 	for {
 		select {
 		case <-done:
-			if err == nil {
+			if len(tag) != 0 {
 				createTomato(tag)
 			}
 			return err
