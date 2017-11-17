@@ -43,10 +43,9 @@ func countDown(outStream io.Writer, target time.Time) {
 }
 
 func task(outStream io.Writer, notify *notificator.Notificator) error {
-	tagCh := make(chan string)
-	errCh := make(chan error)
 	var tag string
 	var err error
+	done := make(chan bool)
 
 	start := time.Now()
 	finish := start.Add(taskDuration)
@@ -68,14 +67,15 @@ func task(outStream io.Writer, notify *notificator.Notificator) error {
 			scanner.Scan()
 
 			if scanner.Err() != nil {
-				errCh <- scanner.Err()
+				err = scanner.Err()
+				done <- true
 				return
 			}
 
-			inputValue := scanner.Text()
+			tag = scanner.Text()
 
-			if !isBlank(inputValue) {
-				tagCh <- inputValue
+			if !isBlank(tag) {
+				done <- true
 				return
 			}
 
@@ -85,10 +85,10 @@ func task(outStream io.Writer, notify *notificator.Notificator) error {
 
 	for {
 		select {
-		case tag = <-tagCh:
-			createTomato(tag)
-			return nil
-		case err = <-errCh:
+		case <-done:
+			if err == nil {
+				createTomato(tag)
+			}
 			return err
 		case <-time.After(10 * time.Second):
 			if notify != nil {
