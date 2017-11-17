@@ -43,7 +43,10 @@ func countDown(outStream io.Writer, target time.Time) {
 }
 
 func task(outStream io.Writer, notify *notificator.Notificator) error {
+	tagCh := make(chan string)
+	errCh := make(chan error)
 	var tag string
+	var err error
 
 	start := time.Now()
 	finish := start.Add(taskDuration)
@@ -60,26 +63,39 @@ func task(outStream io.Writer, notify *notificator.Notificator) error {
 	scanner := bufio.NewScanner(os.Stdin)
 	fmt.Fprint(outStream, "\nTag: ")
 
+	go func() {
+		for {
+			scanner.Scan()
+
+			if scanner.Err() != nil {
+				errCh <- scanner.Err()
+				return
+			}
+
+			inputValue := scanner.Text()
+
+			if !isBlank(inputValue) {
+				tagCh <- inputValue
+				return
+			}
+
+			fmt.Fprint(outStream, "Please input non empty value\nTag: ")
+		}
+	}()
+
 	for {
-		if !scanner.Scan() {
+		select {
+		case tag = <-tagCh:
+			createTomato(tag)
 			return nil
+		case err = <-errCh:
+			return err
+		case <-time.After(10 * time.Second):
+			if notify != nil {
+				notify.Push("Tomato", "Please input tag", "", notificator.UR_CRITICAL)
+			}
 		}
-
-		if scanner.Err() != nil {
-			return scanner.Err()
-		}
-
-		tag = scanner.Text()
-
-		if !isBlank(tag) {
-			break
-		}
-		fmt.Fprint(outStream, "Please input non empty value\nTag: ")
 	}
-
-	createTomato(tag)
-
-	return nil
 }
 
 func rest(outStream io.Writer, notify *notificator.Notificator, duration time.Duration) {
