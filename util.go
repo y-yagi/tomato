@@ -5,7 +5,7 @@ import (
 	"regexp"
 )
 
-var blank_re = regexp.MustCompile("\\A[[:space:]]*\\z")
+var blankRe = regexp.MustCompile("\\A[[:space:]]*\\z")
 
 func isExist(filename string) bool {
 	_, err := os.Stat(filename)
@@ -22,5 +22,5 @@ func contains(s []string, e string) bool {
 }
 
 func isBlank(str string) bool {
-	return len(str) == 0 || blank_re.MatchString(str)
+	return len(str) == 0 || blankRe.MatchString(str)
 }
