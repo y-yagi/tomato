@@ -90,7 +90,7 @@ func task(outStream io.Writer, notify *notificator.Notificator) error {
 				createTomato(tag)
 			}
 			return err
-		case <-time.After(10 * time.Second):
+		case <-time.After(60 * time.Second):
 			if notify != nil {
 				notify.Push("Tomato", "Please input tag", "", notificator.UR_CRITICAL)
 			}
