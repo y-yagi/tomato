@@ -44,11 +44,11 @@ func showTomatoes(outStream io.Writer, showRange string) error {
 	var start time.Time
 	var end time.Time
 
-	if showRange == "all" {
+	if showRange == "all" || showRange == "a" {
 		start = time.Date(2000, 01, 01, 00, 00, 00, 0, time.Now().Location())
-	} else if showRange == "week" {
+	} else if showRange == "week" || showRange == "w" {
 		start = now.BeginningOfWeek()
-	} else if showRange == "mohth" {
+	} else if showRange == "mohth" || showRange == "m" {
 		start = now.BeginningOfMonth()
 	}
 

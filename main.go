@@ -147,13 +147,13 @@ func run(args []string, outStream, errStream io.Writer) (exitCode int) {
 	}
 
 	if len(show) != 0 {
-		if !contains([]string{"today", "week", "month", "all"}, show) {
+		if !contains([]string{"today", "week", "month", "all", "t", "w", "m", "a"}, show) {
 			fmt.Printf("'%s' is invalid argument. Please specify 'today', 'week', 'month' or 'all'.\n", show)
 			exitCode = 1
 			return
 		}
 
-		if show == "today" {
+		if show == "today" || show == "t" {
 			err = showTodayTomatoes(outStream)
 		} else {
 			err = showTomatoes(outStream, show)
