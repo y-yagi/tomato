@@ -153,12 +153,7 @@ func run(args []string, outStream, errStream io.Writer) (exitCode int) {
 			return
 		}
 
-		if show == "today" || show == "t" {
-			err = showTodayTomatoes(outStream)
-		} else {
-			err = showTomatoes(outStream, show)
-		}
-
+		err = showTomatoes(outStream, show)
 		if err != nil {
 			fmt.Fprintf(outStream, "Error: %v\n", err)
 			exitCode = 1
