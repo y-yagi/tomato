@@ -1,6 +1,7 @@
 package main
 
 import (
+	"errors"
 	"fmt"
 	"io"
 	"strconv"
@@ -52,6 +53,9 @@ func showTomatoes(outStream io.Writer, showRange string) error {
 		start = now.BeginningOfWeek()
 	} else if showRange == "mohth" || showRange == "m" {
 		start = now.BeginningOfMonth()
+	} else {
+		msg := fmt.Sprintf("'%s' is invalid argument. Please specify 'today', 'week', 'month' or 'all'.", showRange)
+		return errors.New(msg)
 	}
 
 	end = time.Now()
