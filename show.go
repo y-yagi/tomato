@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"io"
 	"strconv"
+	"strings"
 	"time"
 
 	"github.com/jinzhu/now"
@@ -45,16 +46,18 @@ func showTomatoes(outStream io.Writer, showRange string) error {
 	var start time.Time
 	var end time.Time
 
-	if showRange == "today" || showRange == "t" {
+	detectedRange := detectRange(showRange)
+
+	if detectedRange == "today" {
 		return showTodayTomatoes(outStream)
-	} else if showRange == "all" || showRange == "a" {
+	} else if detectedRange == "all" {
 		start = time.Date(2000, 01, 01, 00, 00, 00, 0, time.Now().Location())
-	} else if showRange == "week" || showRange == "w" {
+	} else if detectedRange == "week" {
 		start = now.BeginningOfWeek()
-	} else if showRange == "mohth" || showRange == "m" {
+	} else if detectedRange == "mohth" {
 		start = now.BeginningOfMonth()
 	} else {
-		msg := fmt.Sprintf("'%s' is invalid argument. Please specify 'today', 'week', 'month' or 'all'.", showRange)
+		msg := fmt.Sprintf("'%s' is invalid argument. Please specify 'today', 'week', 'month' or 'all'.", detectedRange)
 		return errors.New(msg)
 	}
 
@@ -84,4 +87,17 @@ func showTomatoes(outStream io.Writer, showRange string) error {
 	table.Render()
 
 	return nil
+}
+
+func detectRange(showRange string) string {
+	validRanges := []string{"today", "week", "month", "all"}
+	detectedRange := showRange
+	for _, v := range validRanges {
+		if strings.HasPrefix(v, showRange) {
+			detectedRange = v
+			break
+		}
+	}
+
+	return detectedRange
 }
