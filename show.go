@@ -54,7 +54,7 @@ func showTomatoes(outStream io.Writer, showRange string) error {
 		start = time.Date(2000, 01, 01, 00, 00, 00, 0, time.Now().Location())
 	} else if detectedRange == "week" {
 		start = now.BeginningOfWeek()
-	} else if detectedRange == "mohth" {
+	} else if detectedRange == "month" {
 		start = now.BeginningOfMonth()
 	} else {
 		msg := fmt.Sprintf("'%s' is invalid argument. Please specify 'today', 'week', 'month' or 'all'.", detectedRange)
