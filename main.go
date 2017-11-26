@@ -147,18 +147,7 @@ func run(args []string, outStream, errStream io.Writer) (exitCode int) {
 	}
 
 	if len(show) != 0 {
-		if !contains([]string{"today", "week", "month", "all"}, show) {
-			fmt.Printf("'%s' is invalid argument. Please specify 'today', 'week', 'month' or 'all'.\n", show)
-			exitCode = 1
-			return
-		}
-
-		if show == "today" {
-			err = showTodayTomatoes(outStream)
-		} else {
-			err = showTomatoes(outStream, show)
-		}
-
+		err = showTomatoes(outStream, show)
 		if err != nil {
 			fmt.Fprintf(outStream, "Error: %v\n", err)
 			exitCode = 1
