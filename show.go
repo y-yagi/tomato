@@ -48,15 +48,16 @@ func showTomatoes(outStream io.Writer, showRange string) error {
 
 	detectedRange := detectRange(showRange)
 
-	if detectedRange == "today" {
+	switch detectedRange {
+	case "today":
 		return showTodayTomatoes(outStream)
-	} else if detectedRange == "all" {
+	case "all":
 		start = time.Date(2000, 01, 01, 00, 00, 00, 0, time.Now().Location())
-	} else if detectedRange == "week" {
+	case "week":
 		start = now.BeginningOfWeek()
-	} else if detectedRange == "month" {
+	case "month":
 		start = now.BeginningOfMonth()
-	} else {
+	default:
 		msg := fmt.Sprintf("'%s' is invalid argument. Please specify 'today', 'week', 'month' or 'all'.", detectedRange)
 		return errors.New(msg)
 	}
