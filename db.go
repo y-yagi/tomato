@@ -5,6 +5,7 @@ import (
 
 	"github.com/jmoiron/sqlx"
 	_ "github.com/mattn/go-sqlite3"
+	"github.com/y-yagi/goext/osext"
 )
 
 var (
@@ -40,7 +41,7 @@ type TagSummary struct {
 }
 
 func initDB() error {
-	if isExist(cfg.DataBase) {
+	if osext.IsExist(cfg.DataBase) {
 		return nil
 	}
 
