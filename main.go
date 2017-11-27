@@ -13,6 +13,8 @@ import (
 
 	"github.com/0xAX/notificator"
 	"github.com/y-yagi/configure"
+	"github.com/y-yagi/goext/osext"
+	"github.com/y-yagi/goext/strext"
 )
 
 type config struct {
@@ -74,7 +76,7 @@ func task(outStream io.Writer, notify *notificator.Notificator) error {
 
 			tag = scanner.Text()
 
-			if !isBlank(tag) {
+			if !strext.IsBlank(tag) {
 				done <- true
 				return
 			}
@@ -186,7 +188,7 @@ func init() {
 	}
 
 	finishSound = filepath.Join(configure.ConfigDir("tomato"), "ringing.mp3")
-	if !isExist(finishSound) {
+	if !osext.IsExist(finishSound) {
 		err := ioutil.WriteFile(finishSound, Assets.Files["/ringing.mp3"].Data, 0755)
 		if err != nil {
 			fmt.Fprintf(os.Stderr, "Error: %v\n", err)
