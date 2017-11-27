@@ -57,6 +57,12 @@
 
 [[projects]]
   branch = "master"
+  name = "github.com/y-yagi/goext"
+  packages = ["osext","strext"]
+  revision = "97e7f7695ff3ee9c0a1b80a68916b7f21d186095"
+
+[[projects]]
+  branch = "master"
   name = "golang.org/x/net"
   packages = ["context"]
   revision = "c73622c77280266305273cb545f54516ced95b93"
@@ -64,6 +70,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "a88968d2b5594b53b793c973e52dab1819b4bec2ab142d2d6fcc35eff6963f26"
+  inputs-digest = "ee262ccbf6e845be0c6b64a8a107c2c82c16c6880926343251a991b68046e84b"
   solver-name = "gps-cdcl"
   solver-version = 1
