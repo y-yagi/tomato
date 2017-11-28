@@ -17,7 +17,7 @@ import (
 	"github.com/y-yagi/goext/strext"
 )
 
-// PomodoroTimer is a module timer
+// PomodoroTimer is a timer module.
 type PomodoroTimer struct {
 	out    io.Writer
 	notify *notificator.Notificator
