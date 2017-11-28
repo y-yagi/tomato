@@ -28,6 +28,8 @@ func run(args []string, outStream, errStream io.Writer) (exitCode int) {
 	var config bool
 	var err error
 
+	exitCode = 0
+
 	flags := flag.NewFlagSet("tomato", flag.ExitOnError)
 	flags.SetOutput(errStream)
 	flags.StringVar(&show, "s", "", "Show your tomatoes. You can specify range, 'today', 'week', 'month' or 'all'.")
@@ -37,7 +39,6 @@ func run(args []string, outStream, errStream io.Writer) (exitCode int) {
 	notify := notificator.New(notificator.Options{
 		AppName: "Tomato",
 	})
-	exitCode = 0
 
 	if config {
 		editor := os.Getenv("EDITOR")
