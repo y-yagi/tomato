@@ -1,4 +1,4 @@
-package main
+package tomato
 
 import (
 	"time"
@@ -40,12 +40,20 @@ type TagSummary struct {
 	Tag   string `db:"tag"`
 }
 
-func initDB() error {
-	if osext.IsExist(cfg.DataBase) {
+type Repository struct {
+	database string
+}
+
+func NewRepository(database string) *Repository {
+	return &Repository{database: database}
+}
+
+func (r *Repository) InitDB() error {
+	if osext.IsExist(r.database) {
 		return nil
 	}
 
-	db, err := sqlx.Connect("sqlite3", cfg.DataBase)
+	db, err := sqlx.Connect("sqlite3", r.database)
 	if err != nil {
 		return err
 	}
@@ -56,8 +64,8 @@ func initDB() error {
 	return nil
 }
 
-func createTomato(tag string) error {
-	db, err := sqlx.Connect("sqlite3", cfg.DataBase)
+func (r *Repository) createTomato(tag string) error {
+	db, err := sqlx.Connect("sqlite3", r.database)
 	if err != nil {
 		return err
 	}
@@ -70,8 +78,8 @@ func createTomato(tag string) error {
 	return nil
 }
 
-func selectTomatos(start time.Time, end time.Time) ([]Tomato, error) {
-	db, err := sqlx.Connect("sqlite3", cfg.DataBase)
+func (r *Repository) selectTomatos(start time.Time, end time.Time) ([]Tomato, error) {
+	db, err := sqlx.Connect("sqlite3", r.database)
 	if err != nil {
 		return nil, err
 	}
@@ -86,8 +94,8 @@ func selectTomatos(start time.Time, end time.Time) ([]Tomato, error) {
 	return tomatoes, nil
 }
 
-func selectTagSummary(start time.Time, end time.Time) ([]TagSummary, error) {
-	db, err := sqlx.Connect("sqlite3", cfg.DataBase)
+func (r *Repository) selectTagSummary(start time.Time, end time.Time) ([]TagSummary, error) {
+	db, err := sqlx.Connect("sqlite3", r.database)
 	if err != nil {
 		return nil, err
 	}

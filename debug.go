@@ -1,6 +1,6 @@
 // +build debug
 
-package main
+package tomato
 
 import "time"
 
