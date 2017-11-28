@@ -9,6 +9,7 @@ import (
 	"path/filepath"
 
 	"github.com/0xAX/notificator"
+	_ "github.com/mattn/go-sqlite3"
 	"github.com/y-yagi/configure"
 	"github.com/y-yagi/goext/osext"
 	"github.com/y-yagi/tomato"

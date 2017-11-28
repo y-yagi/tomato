@@ -5,8 +5,6 @@ import (
 
 	"github.com/jmoiron/sqlx"
 
-	// SQLite3 driver
-	_ "github.com/mattn/go-sqlite3"
 	"github.com/y-yagi/goext/osext"
 )
 
