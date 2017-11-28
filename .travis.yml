@@ -10,8 +10,8 @@ install:
   - dep ensure
 
 before_script:
-  - go vet
-  - golint -set_exit_status
+  - go vet $(go list ./... | grep -vF /vendor/)
+  - golint -set_exit_status $(go list ./... | grep -vF /vendor/)
 
 script:
   - go test -v
