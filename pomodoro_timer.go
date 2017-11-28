@@ -115,10 +115,8 @@ func (timer *PomodoroTimer) rest(duration time.Duration) {
 	fmt.Fprint(timer.out, "\nPlease press the Enter key for start next tomato.\n")
 
 	go func() {
-		for {
-			scanner.Scan()
-			done <- true
-		}
+		scanner.Scan()
+		done <- true
 	}()
 
 	for {
