@@ -4,6 +4,8 @@ import (
 	"time"
 
 	"github.com/jmoiron/sqlx"
+
+	// SQLite3 driver
 	_ "github.com/mattn/go-sqlite3"
 	"github.com/y-yagi/goext/osext"
 )
@@ -34,20 +36,23 @@ type Tomato struct {
 	CreatedAt time.Time `db:"created_at"`
 }
 
-// TagSummary is type for count per tag
+// TagSummary is type for count per tag.
 type TagSummary struct {
 	Count int    `db:"tag_count"`
 	Tag   string `db:"tag"`
 }
 
+// Repository is type for database operation.
 type Repository struct {
 	database string
 }
 
+// NewRepository creates a new repository.
 func NewRepository(database string) *Repository {
 	return &Repository{database: database}
 }
 
+// InitDB initialize database.
 func (r *Repository) InitDB() error {
 	if osext.IsExist(r.database) {
 		return nil

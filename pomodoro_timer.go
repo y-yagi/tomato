@@ -17,6 +17,7 @@ import (
 	"github.com/y-yagi/goext/strext"
 )
 
+// PomodoroTimer is a module timer
 type PomodoroTimer struct {
 	out    io.Writer
 	notify *notificator.Notificator
@@ -24,10 +25,12 @@ type PomodoroTimer struct {
 	sound  string
 }
 
+// NewPomodoroTimer creates a new timer.
 func NewPomodoroTimer(out io.Writer, notify *notificator.Notificator, repo *Repository, sound string) *PomodoroTimer {
 	return &PomodoroTimer{out: out, notify: notify, repo: repo, sound: sound}
 }
 
+// Run pomodoro timer.
 func (timer *PomodoroTimer) Run() error {
 	var tag string
 	var err error
@@ -84,10 +87,12 @@ func (timer *PomodoroTimer) Run() error {
 	}
 }
 
+// ShortRest take a short rest.
 func (timer *PomodoroTimer) ShortRest() {
 	timer.rest(restDuration)
 }
 
+// LongRest take a long rest.
 func (timer *PomodoroTimer) LongRest() {
 	timer.rest(longRestDuration)
 }
@@ -128,6 +133,7 @@ func (timer *PomodoroTimer) rest(duration time.Duration) {
 	}
 }
 
+// Show past pomodoro.
 func (timer *PomodoroTimer) Show(showRange string) error {
 	var start time.Time
 	var end time.Time
