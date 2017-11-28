@@ -101,6 +101,7 @@ func task(outStream io.Writer, notify *notificator.Notificator) error {
 }
 
 func rest(outStream io.Writer, notify *notificator.Notificator, duration time.Duration) {
+	done := make(chan bool)
 	start := time.Now()
 	finish := start.Add(duration)
 	fmt.Fprintf(outStream, "\nStart rest.\n")
@@ -114,7 +115,24 @@ func rest(outStream io.Writer, notify *notificator.Notificator, duration time.Du
 
 	scanner := bufio.NewScanner(os.Stdin)
 	fmt.Fprint(outStream, "\nPlease press the Enter key for start next tomato.\n")
-	scanner.Scan()
+
+	go func() {
+		for {
+			scanner.Scan()
+			done <- true
+		}
+	}()
+
+	for {
+		select {
+		case <-done:
+			return
+		case <-time.After(60 * time.Second):
+			if notify != nil {
+				notify.Push("Tomato", "Please press the Enter key for start next tomato.", "", notificator.UR_CRITICAL)
+			}
+		}
+	}
 }
 
 func run(args []string, outStream, errStream io.Writer) (exitCode int) {
