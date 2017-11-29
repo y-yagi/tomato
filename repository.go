@@ -1,10 +1,10 @@
-package main
+package tomato
 
 import (
 	"time"
 
 	"github.com/jmoiron/sqlx"
-	_ "github.com/mattn/go-sqlite3"
+
 	"github.com/y-yagi/goext/osext"
 )
 
@@ -34,18 +34,29 @@ type Tomato struct {
 	CreatedAt time.Time `db:"created_at"`
 }
 
-// TagSummary is type for count per tag
+// TagSummary is type for count per tag.
 type TagSummary struct {
 	Count int    `db:"tag_count"`
 	Tag   string `db:"tag"`
 }
 
-func initDB() error {
-	if osext.IsExist(cfg.DataBase) {
+// Repository is type for database operation.
+type Repository struct {
+	database string
+}
+
+// NewRepository creates a new repository.
+func NewRepository(database string) *Repository {
+	return &Repository{database: database}
+}
+
+// InitDB initialize database.
+func (r *Repository) InitDB() error {
+	if osext.IsExist(r.database) {
 		return nil
 	}
 
-	db, err := sqlx.Connect("sqlite3", cfg.DataBase)
+	db, err := sqlx.Connect("sqlite3", r.database)
 	if err != nil {
 		return err
 	}
@@ -56,8 +67,8 @@ func initDB() error {
 	return nil
 }
 
-func createTomato(tag string) error {
-	db, err := sqlx.Connect("sqlite3", cfg.DataBase)
+func (r *Repository) createTomato(tag string) error {
+	db, err := sqlx.Connect("sqlite3", r.database)
 	if err != nil {
 		return err
 	}
@@ -70,8 +81,8 @@ func createTomato(tag string) error {
 	return nil
 }
 
-func selectTomatos(start time.Time, end time.Time) ([]Tomato, error) {
-	db, err := sqlx.Connect("sqlite3", cfg.DataBase)
+func (r *Repository) selectTomatos(start time.Time, end time.Time) ([]Tomato, error) {
+	db, err := sqlx.Connect("sqlite3", r.database)
 	if err != nil {
 		return nil, err
 	}
@@ -86,8 +97,8 @@ func selectTomatos(start time.Time, end time.Time) ([]Tomato, error) {
 	return tomatoes, nil
 }
 
-func selectTagSummary(start time.Time, end time.Time) ([]TagSummary, error) {
-	db, err := sqlx.Connect("sqlite3", cfg.DataBase)
+func (r *Repository) selectTagSummary(start time.Time, end time.Time) ([]TagSummary, error) {
+	db, err := sqlx.Connect("sqlite3", r.database)
 	if err != nil {
 		return nil, err
 	}
