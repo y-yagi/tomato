@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"io"
+	"io/ioutil"
 	"os"
 	"os/exec"
 	"strconv"
@@ -15,20 +16,24 @@ import (
 	"github.com/chzyer/readline"
 	"github.com/jinzhu/now"
 	"github.com/olekukonko/tablewriter"
+	"github.com/y-yagi/goext/osext"
 	"github.com/y-yagi/goext/strext"
 )
 
 // PomodoroTimer is a timer module.
 type PomodoroTimer struct {
-	out    io.Writer
-	notify *notificator.Notificator
-	repo   *Repository
-	sound  string
+	out         io.Writer
+	notify      *notificator.Notificator
+	repo        *Repository
+	sound       string
+	historyFile string
 }
 
 // NewPomodoroTimer creates a new timer.
-func NewPomodoroTimer(out io.Writer, notify *notificator.Notificator, repo *Repository, sound string) *PomodoroTimer {
-	return &PomodoroTimer{out: out, notify: notify, repo: repo, sound: sound}
+func NewPomodoroTimer(out io.Writer, notify *notificator.Notificator, repo *Repository, sound string, historyFile string) *PomodoroTimer {
+	timer := &PomodoroTimer{out: out, notify: notify, repo: repo, sound: sound, historyFile: historyFile}
+	timer.init()
+	return timer
 }
 
 // Run pomodoro timer.
@@ -49,15 +54,11 @@ func (timer *PomodoroTimer) Run() error {
 
 	_ = exec.Command("mpg123", timer.sound).Start()
 
-	var completer = readline.NewPrefixCompleter(
-		readline.PcItemDynamic(timer.recentUsedTags()),
-	)
-
 	l, err := readline.NewEx(&readline.Config{
 		Prompt:          "Tags: ",
 		InterruptPrompt: "^C",
 		Stdout:          timer.out,
-		AutoComplete:    completer,
+		HistoryFile:     timer.historyFile,
 	})
 
 	if err != nil {
@@ -255,9 +256,9 @@ func (timer *PomodoroTimer) countDown(target time.Time) {
 	}
 }
 
-func (timer *PomodoroTimer) recentUsedTags() func(string) []string {
-	return func(line string) []string {
-		tags, _ := timer.repo.selectRecentTags()
-		return tags
+func (timer *PomodoroTimer) init() {
+	if !osext.IsExist(timer.historyFile) {
+		tags, _ := timer.repo.selectTags()
+		ioutil.WriteFile(timer.historyFile, []byte(strings.Join(tags, "\n")), 0644)
 	}
 }

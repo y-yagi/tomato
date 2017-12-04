@@ -63,7 +63,8 @@ func run(args []string, outStream, errStream io.Writer) (exitCode int) {
 		os.Exit(1)
 	}
 
-	timer := tomato.NewPomodoroTimer(outStream, notify, repo, finishSound)
+	historyFile := filepath.Join(configure.ConfigDir("tomato"), "readline.tmp")
+	timer := tomato.NewPomodoroTimer(outStream, notify, repo, finishSound, historyFile)
 
 	if len(show) != 0 {
 		err = timer.Show(show)

@@ -26,8 +26,8 @@ SELECT COUNT(tag) as tag_count, tag FROM tomatoes WHERE created_at BETWEEN $1 AN
 	GROUP BY tag ORDER BY tag_count DESC
 `
 
-	recentTagQuery = `
-SELECT tag FROM tomatoes GROUP BY tag ORDER BY created_at DESC limit 20
+	tagsQuery = `
+SELECT tag FROM tomatoes GROUP BY tag ORDER BY created_at ASC
 `
 )
 
@@ -117,7 +117,7 @@ func (r *Repository) selectTagSummary(start time.Time, end time.Time) ([]TagSumm
 	return tagSummaries, nil
 }
 
-func (r *Repository) selectRecentTags() ([]string, error) {
+func (r *Repository) selectTags() ([]string, error) {
 	db, err := sqlx.Connect("sqlite3", r.database)
 	if err != nil {
 		return nil, err
@@ -125,7 +125,7 @@ func (r *Repository) selectRecentTags() ([]string, error) {
 	defer db.Close()
 
 	tags := []string{}
-	err = db.Select(&tags, recentTagQuery)
+	err = db.Select(&tags, tagsQuery)
 	if err != nil {
 		return nil, err
 	}
