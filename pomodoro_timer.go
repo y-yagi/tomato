@@ -12,6 +12,7 @@ import (
 	"time"
 
 	"github.com/0xAX/notificator"
+	"github.com/chzyer/readline"
 	"github.com/jinzhu/now"
 	"github.com/olekukonko/tablewriter"
 	"github.com/y-yagi/goext/strext"
@@ -48,20 +49,26 @@ func (timer *PomodoroTimer) Run() error {
 
 	_ = exec.Command("mpg123", timer.sound).Start()
 
-	scanner := bufio.NewScanner(os.Stdin)
-	fmt.Fprint(timer.out, "\nTag: ")
+	l, err := readline.NewEx(&readline.Config{
+		Prompt:            "Tag: ",
+		InterruptPrompt:   "^C",
+		HistorySearchFold: true,
+		Stdout:            timer.out,
+		HistoryFile:       "/tmp/readline.tmp",
+	})
+
+	if err != nil {
+		return err
+	}
+	defer l.Close()
 
 	go func() {
 		for {
-			scanner.Scan()
-
-			if scanner.Err() != nil {
-				err = scanner.Err()
+			tag, err = l.Readline()
+			if err == readline.ErrInterrupt {
 				done <- true
 				return
 			}
-
-			tag = scanner.Text()
 
 			if !strext.IsBlank(tag) {
 				done <- true
