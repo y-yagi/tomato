@@ -25,6 +25,10 @@ SELECT id, tag, created_at FROM tomatoes WHERE created_at BETWEEN $1 AND $2 ORDE
 SELECT COUNT(tag) as tag_count, tag FROM tomatoes WHERE created_at BETWEEN $1 AND $2
 	GROUP BY tag ORDER BY tag_count DESC
 `
+
+	recentTagQuery = `
+SELECT tag FROM tomatoes GROUP BY tag ORDER BY created_at DESC limit 20
+`
 )
 
 // Tomato is type for `tomatoes` table
@@ -111,4 +115,20 @@ func (r *Repository) selectTagSummary(start time.Time, end time.Time) ([]TagSumm
 	}
 
 	return tagSummaries, nil
+}
+
+func (r *Repository) selectRecentTags() ([]string, error) {
+	db, err := sqlx.Connect("sqlite3", r.database)
+	if err != nil {
+		return nil, err
+	}
+	defer db.Close()
+
+	tags := []string{}
+	err = db.Select(&tags, recentTagQuery)
+	if err != nil {
+		return nil, err
+	}
+
+	return tags, nil
 }

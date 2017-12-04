@@ -49,12 +49,15 @@ func (timer *PomodoroTimer) Run() error {
 
 	_ = exec.Command("mpg123", timer.sound).Start()
 
+	var completer = readline.NewPrefixCompleter(
+		readline.PcItemDynamic(timer.recentUsedTags()),
+	)
+
 	l, err := readline.NewEx(&readline.Config{
-		Prompt:            "Tag: ",
-		InterruptPrompt:   "^C",
-		HistorySearchFold: true,
-		Stdout:            timer.out,
-		HistoryFile:       "/tmp/readline.tmp",
+		Prompt:          "Tags: ",
+		InterruptPrompt: "^C",
+		Stdout:          timer.out,
+		AutoComplete:    completer,
 	})
 
 	if err != nil {
@@ -249,5 +252,12 @@ func (timer *PomodoroTimer) countDown(target time.Time) {
 		if timer.out == os.Stdout {
 			os.Stdout.Sync()
 		}
+	}
+}
+
+func (timer *PomodoroTimer) recentUsedTags() func(string) []string {
+	return func(line string) []string {
+		tags, _ := timer.repo.selectRecentTags()
+		return tags
 	}
 }
