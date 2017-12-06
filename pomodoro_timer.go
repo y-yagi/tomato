@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"io"
+	"io/ioutil"
 	"os"
 	"os/exec"
 	"strconv"
@@ -12,22 +13,27 @@ import (
 	"time"
 
 	"github.com/0xAX/notificator"
+	"github.com/chzyer/readline"
 	"github.com/jinzhu/now"
 	"github.com/olekukonko/tablewriter"
+	"github.com/y-yagi/goext/osext"
 	"github.com/y-yagi/goext/strext"
 )
 
 // PomodoroTimer is a timer module.
 type PomodoroTimer struct {
-	out    io.Writer
-	notify *notificator.Notificator
-	repo   *Repository
-	sound  string
+	out         io.Writer
+	notify      *notificator.Notificator
+	repo        *Repository
+	sound       string
+	historyFile string
 }
 
 // NewPomodoroTimer creates a new timer.
-func NewPomodoroTimer(out io.Writer, notify *notificator.Notificator, repo *Repository, sound string) *PomodoroTimer {
-	return &PomodoroTimer{out: out, notify: notify, repo: repo, sound: sound}
+func NewPomodoroTimer(out io.Writer, notify *notificator.Notificator, repo *Repository, sound string, historyFile string) *PomodoroTimer {
+	timer := &PomodoroTimer{out: out, notify: notify, repo: repo, sound: sound, historyFile: historyFile}
+	timer.init()
+	return timer
 }
 
 // Run pomodoro timer.
@@ -48,20 +54,25 @@ func (timer *PomodoroTimer) Run() error {
 
 	_ = exec.Command("mpg123", timer.sound).Start()
 
-	scanner := bufio.NewScanner(os.Stdin)
-	fmt.Fprint(timer.out, "\nTag: ")
+	l, err := readline.NewEx(&readline.Config{
+		Prompt:          "Tags: ",
+		InterruptPrompt: "^C",
+		Stdout:          timer.out,
+		HistoryFile:     timer.historyFile,
+	})
+
+	if err != nil {
+		return err
+	}
+	defer l.Close()
 
 	go func() {
 		for {
-			scanner.Scan()
-
-			if scanner.Err() != nil {
-				err = scanner.Err()
+			tag, err = l.Readline()
+			if err == readline.ErrInterrupt {
 				done <- true
 				return
 			}
-
-			tag = scanner.Text()
 
 			if !strext.IsBlank(tag) {
 				done <- true
@@ -242,5 +253,12 @@ func (timer *PomodoroTimer) countDown(target time.Time) {
 		if timer.out == os.Stdout {
 			os.Stdout.Sync()
 		}
+	}
+}
+
+func (timer *PomodoroTimer) init() {
+	if !osext.IsExist(timer.historyFile) {
+		tags, _ := timer.repo.selectTags()
+		ioutil.WriteFile(timer.historyFile, []byte(strings.Join(tags, "\n")), 0644)
 	}
 }
