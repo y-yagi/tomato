@@ -14,6 +14,12 @@
   version = "v0.3.0"
 
 [[projects]]
+  name = "github.com/chzyer/readline"
+  packages = ["."]
+  revision = "62c6fe6193755f722b8b8788aa7357be55a50ff1"
+  version = "v1.4"
+
+[[projects]]
   branch = "master"
   name = "github.com/jessevdk/go-assets"
   packages = ["."]
@@ -29,7 +35,7 @@
   branch = "master"
   name = "github.com/jmoiron/sqlx"
   packages = [".","reflectx"]
-  revision = "3379e5993990b1f927fc8db926485e6f6becf2d2"
+  revision = "de8647470aafe4854c976707c431dbe1eb2822c6"
 
 [[projects]]
   name = "github.com/mattn/go-runewidth"
@@ -40,36 +46,36 @@
 [[projects]]
   name = "github.com/mattn/go-sqlite3"
   packages = ["."]
-  revision = "5160b48509cf5c877bc22c11c373f8c7738cdb38"
-  version = "v1.3.0"
+  revision = "ed69081a91fd053f17672236b0dd52ba7485e1a3"
+  version = "v1.4.0"
 
 [[projects]]
   branch = "master"
   name = "github.com/olekukonko/tablewriter"
   packages = ["."]
-  revision = "a7a4c189eb47ed33ce7b35f2880070a0c82a67d4"
+  revision = "65fec0d89a572b4367094e2058d3ebe667de3b60"
 
 [[projects]]
   branch = "master"
   name = "github.com/y-yagi/configure"
   packages = ["."]
-  revision = "65ccf933d7a324eb475f89a15079f82dedb1bb78"
+  revision = "4bee88f0d6cec9839aed600d2bca0d66591001f7"
 
 [[projects]]
   branch = "master"
   name = "github.com/y-yagi/goext"
   packages = ["osext","strext"]
-  revision = "97e7f7695ff3ee9c0a1b80a68916b7f21d186095"
+  revision = "0c562708d18a124f202f8b4e7853a57943d9ee73"
 
 [[projects]]
   branch = "master"
   name = "golang.org/x/net"
   packages = ["context"]
-  revision = "c73622c77280266305273cb545f54516ced95b93"
+  revision = "d866cfc389cec985d6fda2859936a575a55a3ab6"
 
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "ee262ccbf6e845be0c6b64a8a107c2c82c16c6880926343251a991b68046e84b"
+  inputs-digest = "1c632967245ddc5ad651d9bc491f02cd946845f26add04f6454c57c4ff84c911"
   solver-name = "gps-cdcl"
   solver-version = 1
