@@ -18,8 +18,8 @@ jobs:
       - run:
           name: Run lint
           command: |
-            go build ./vendor/github.com/golang/lint/golint
-            ./golint -set_exit_status
+            go get -u github.com/golang/lint/golint
+            golint -set_exit_status
       - run:
           name: Run tests
           command: go test -v
