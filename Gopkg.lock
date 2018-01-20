@@ -34,7 +34,10 @@
 [[projects]]
   branch = "master"
   name = "github.com/jmoiron/sqlx"
-  packages = [".","reflectx"]
+  packages = [
+    ".",
+    "reflectx"
+  ]
   revision = "de8647470aafe4854c976707c431dbe1eb2822c6"
 
 [[projects]]
@@ -46,14 +49,14 @@
 [[projects]]
   name = "github.com/mattn/go-sqlite3"
   packages = ["."]
-  revision = "ed69081a91fd053f17672236b0dd52ba7485e1a3"
-  version = "v1.4.0"
+  revision = "6c771bb9887719704b210e87e934f08be014bdb1"
+  version = "v1.6.0"
 
 [[projects]]
   branch = "master"
   name = "github.com/olekukonko/tablewriter"
   packages = ["."]
-  revision = "65fec0d89a572b4367094e2058d3ebe667de3b60"
+  revision = "96aac992fc8b1a4c83841a6c3e7178d20d989625"
 
 [[projects]]
   branch = "master"
@@ -64,14 +67,11 @@
 [[projects]]
   branch = "master"
   name = "github.com/y-yagi/goext"
-  packages = ["osext","strext"]
-  revision = "0c562708d18a124f202f8b4e7853a57943d9ee73"
-
-[[projects]]
-  branch = "master"
-  name = "golang.org/x/net"
-  packages = ["context"]
-  revision = "d866cfc389cec985d6fda2859936a575a55a3ab6"
+  packages = [
+    "osext",
+    "strext"
+  ]
+  revision = "fd0b1e87eb0981c2c24c15b6013e33ec203d8281"
 
 [solve-meta]
   analyzer-name = "dep"
