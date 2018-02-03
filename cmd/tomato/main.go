@@ -107,6 +107,11 @@ func init() {
 			os.Exit(1)
 		}
 	}
+
+	if len(cfg.DataBase) == 0 {
+		cfg.DataBase = filepath.Join(configure.ConfigDir("tomato"), "tomato.db")
+		configure.Save("tomato", cfg)
+	}
 }
 
 // go:generate go-assets-builder -s="/data" -o bindata.go data
