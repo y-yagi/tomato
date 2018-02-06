@@ -56,13 +56,13 @@
   branch = "master"
   name = "github.com/olekukonko/tablewriter"
   packages = ["."]
-  revision = "96aac992fc8b1a4c83841a6c3e7178d20d989625"
+  revision = "b8a9be070da40449e501c3c4730a889e42d87a9e"
 
 [[projects]]
   branch = "master"
   name = "github.com/y-yagi/configure"
   packages = ["."]
-  revision = "4bee88f0d6cec9839aed600d2bca0d66591001f7"
+  revision = "3be07ab709be3a977639cd3f27052240e1e0c2d6"
 
 [[projects]]
   branch = "master"
