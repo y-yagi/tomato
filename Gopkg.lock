@@ -29,7 +29,7 @@
   branch = "master"
   name = "github.com/jinzhu/now"
   packages = ["."]
-  revision = "d939ba741945c047cac69c329c5fb0d6b4a06520"
+  revision = "d0d89933cb0e984452409d4a6a595df4b3b78a6f"
 
 [[projects]]
   branch = "master"
