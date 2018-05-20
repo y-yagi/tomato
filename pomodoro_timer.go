@@ -42,11 +42,9 @@ func (timer *PomodoroTimer) Run() error {
 	var err error
 	done := make(chan bool)
 
-	start := time.Now()
-	finish := start.Add(taskDuration)
 	fmt.Fprint(timer.out, "Start task.\n")
 
-	timer.countDown(finish)
+	timer.countDown(taskDuration)
 
 	if timer.notify != nil {
 		timer.notify.Push("Tomato", "Pomodoro finished!", "", notificator.UR_CRITICAL)
@@ -110,11 +108,9 @@ func (timer *PomodoroTimer) LongRest() {
 
 func (timer *PomodoroTimer) rest(duration time.Duration) {
 	done := make(chan bool)
-	start := time.Now()
-	finish := start.Add(duration)
 	fmt.Fprintf(timer.out, "\nStart rest.\n")
 
-	timer.countDown(finish)
+	timer.countDown(duration)
 
 	if timer.notify != nil {
 		timer.notify.Push("Tomato", "Break is over!", "", notificator.UR_CRITICAL)
@@ -241,18 +237,19 @@ func (timer *PomodoroTimer) formatMinutes(timeLeft time.Duration) string {
 	return fmt.Sprintf("%d:%02d", minutes, seconds)
 }
 
-func (timer *PomodoroTimer) countDown(target time.Time) {
-	for range time.Tick(100 * time.Millisecond) {
-		timeLeft := -time.Since(target)
+func (timer *PomodoroTimer) countDown(duration time.Duration) {
+	start := time.Now()
+	finish := start.Add(duration)
+
+	for {
+		timeLeft := -time.Since(finish)
 		if timeLeft < 0 {
 			fmt.Fprint(timer.out, "Countdown: ", timer.formatMinutes(0), "   \r")
 			return
 		}
-		fmt.Fprint(timer.out, "Countdown: ", timer.formatMinutes(timeLeft), "   \r")
 
-		if timer.out == os.Stdout {
-			os.Stdout.Sync()
-		}
+		fmt.Fprint(timer.out, "Countdown: ", timer.formatMinutes(timeLeft), "   \r")
+		time.Sleep(1 * time.Second)
 	}
 }
 
