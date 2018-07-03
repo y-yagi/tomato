@@ -76,6 +76,12 @@ func run(args []string, outStream, errStream io.Writer) (exitCode int) {
 		return
 	}
 
+	if timer.IsStarted() {
+		fmt.Fprintf(outStream, "Tomato has already started.\n")
+		exitCode = 1
+		return
+	}
+
 	for i := 1; ; i++ {
 		err = timer.Run()
 		if err != nil {

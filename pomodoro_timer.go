@@ -106,6 +106,13 @@ func (timer *PomodoroTimer) LongRest() {
 	timer.rest(longRestDuration)
 }
 
+// IsStarted check already started or not.
+func (timer *PomodoroTimer) IsStarted() bool {
+	output, _ := exec.Command("ps", "--no-headers", "-C", "tomato").Output()
+
+	return strings.Count(string(output), "tomato") > 1
+}
+
 func (timer *PomodoroTimer) rest(duration time.Duration) {
 	done := make(chan bool)
 	fmt.Fprintf(timer.out, "\nStart rest.\n")
