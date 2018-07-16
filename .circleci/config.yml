@@ -48,7 +48,7 @@ workflows:
   version: 2
   build:
     jobs:
-      - dep-update
+      - build
   scheduled-workflow:
     triggers:
       - schedule:
