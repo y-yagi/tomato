@@ -39,7 +39,6 @@ jobs:
           name: Run ci-dep-update
           command: |
             go get -u github.com/y-yagi/ci-dep-update
-            ci-dep-update -u y-yagi -r y-yagi/tomato
 
 workflows:
   version: 2
