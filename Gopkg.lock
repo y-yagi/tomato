@@ -3,79 +3,112 @@
 
 [[projects]]
   branch = "master"
+  digest = "1:2c01e05304115494a8ca2f0c0b9d0384c3dc5115627a2f5864e440201cffebb3"
   name = "github.com/0xAX/notificator"
   packages = ["."]
+  pruneopts = ""
   revision = "88d57ee9043ba88d6a62e437fa15dda1ca0d2b59"
 
 [[projects]]
+  digest = "1:289dd4d7abfb3ad2b5f728fbe9b1d5c1bf7d265a3eb9ef92869af1f7baba4c7a"
   name = "github.com/BurntSushi/toml"
   packages = ["."]
+  pruneopts = ""
   revision = "b26d9c308763d68093482582cea63d69be07a0f0"
   version = "v0.3.0"
 
 [[projects]]
+  digest = "1:ef15b38e9e9fecba7ae3e6e11d9a662f2c147acc25369d1b458d874f8cee17b1"
   name = "github.com/chzyer/readline"
   packages = ["."]
+  pruneopts = ""
   revision = "62c6fe6193755f722b8b8788aa7357be55a50ff1"
   version = "v1.4"
 
 [[projects]]
   branch = "master"
+  digest = "1:860e1118ccf3d852a848b510624521344c0d4d0f35026ae2438fa96a0ec28740"
   name = "github.com/jessevdk/go-assets"
   packages = ["."]
+  pruneopts = ""
   revision = "4f4301a06e153ff90e17793577ab6bf79f8dc5c5"
 
 [[projects]]
   branch = "master"
+  digest = "1:5f16719ece7647959098ef25f5f93f23cba9f6c865b3945aacea1fece07c44fa"
   name = "github.com/jinzhu/now"
   packages = ["."]
+  pruneopts = ""
   revision = "ed742868f2aebdb1c0c437bf4f7257f88834b66f"
 
 [[projects]]
   branch = "master"
+  digest = "1:617ee2434b77e911fa26b678730be9a617f75243b194eadc8201c8ac860844aa"
   name = "github.com/jmoiron/sqlx"
   packages = [
     ".",
-    "reflectx"
+    "reflectx",
   ]
+  pruneopts = ""
   revision = "0dae4fefe7c0e190f7b5a78dac28a1c82cc8d849"
 
 [[projects]]
+  digest = "1:82b912465c1da0668582a7d1117339c278e786c2536b3c3623029a0c7141c2d0"
   name = "github.com/mattn/go-runewidth"
   packages = ["."]
-  revision = "9e777a8366cce605130a531d2cd6363d07ad7317"
-  version = "v0.0.2"
+  pruneopts = ""
+  revision = "ce7b0b5c7b45a81508558cd1dba6bb1e4ddb51bb"
+  version = "v0.0.3"
 
 [[projects]]
+  digest = "1:bc03901fc8f0965ccba8bc453eae21a9b04f95999eab664c7de6dc7290f4e8f4"
   name = "github.com/mattn/go-sqlite3"
   packages = ["."]
+  pruneopts = ""
   revision = "25ecb14adfc7543176f7d85291ec7dba82c6f7e4"
   version = "v1.9.0"
 
 [[projects]]
   branch = "master"
+  digest = "1:816e800c7b5689e114c0dc6acf494553d1e7a52575764c5d6de67fb32bd8bbb2"
   name = "github.com/olekukonko/tablewriter"
   packages = ["."]
+  pruneopts = ""
   revision = "d4647c9c7a84d847478d890b816b7d8b62b0b279"
 
 [[projects]]
   branch = "master"
+  digest = "1:2ec40f67751c07d7235e77dc95850b138237137d599a723cf2ac4633cb651ecb"
   name = "github.com/y-yagi/configure"
   packages = ["."]
-  revision = "c42b370eda560dd5cd90546342ffe9087efe03ab"
+  pruneopts = ""
+  revision = "956c7b6f82b6777d7d06e7abcf9dd9b9f4f5c665"
 
 [[projects]]
   branch = "master"
+  digest = "1:7472dd63c3d95542d867da78adcee5fa886190485d204b5320eecb8f9fb40373"
   name = "github.com/y-yagi/goext"
   packages = [
     "osext",
-    "strext"
+    "strext",
   ]
+  pruneopts = ""
   revision = "fd0b1e87eb0981c2c24c15b6013e33ec203d8281"
 
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "1c632967245ddc5ad651d9bc491f02cd946845f26add04f6454c57c4ff84c911"
+  input-imports = [
+    "github.com/0xAX/notificator",
+    "github.com/chzyer/readline",
+    "github.com/jessevdk/go-assets",
+    "github.com/jinzhu/now",
+    "github.com/jmoiron/sqlx",
+    "github.com/mattn/go-sqlite3",
+    "github.com/olekukonko/tablewriter",
+    "github.com/y-yagi/configure",
+    "github.com/y-yagi/goext/osext",
+    "github.com/y-yagi/goext/strext",
+  ]
   solver-name = "gps-cdcl"
   solver-version = 1
