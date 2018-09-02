@@ -11,5 +11,5 @@ require (
 	github.com/mattn/go-sqlite3 v1.9.0
 	github.com/olekukonko/tablewriter v0.0.0-20180506121414-d4647c9c7a84
 	github.com/y-yagi/configure v0.0.0-20180721061124-956c7b6f82b6
-	github.com/y-yagi/goext v0.0.0-20180101053636-fd0b1e87eb09
+	github.com/y-yagi/goext v0.1.0
 )
