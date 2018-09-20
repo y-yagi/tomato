@@ -42,6 +42,7 @@ jobs:
             cd $GOPATH/src/github.com/y-yagi/ci-dep-update
             dep ensure -vendor-only
             go install
+            cd /go/src/github.com/y-yagi/tomato
             ci-dep-update -u y-yagi -r y-yagi/tomato
 
 workflows:
