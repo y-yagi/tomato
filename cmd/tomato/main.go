@@ -25,6 +25,34 @@ var (
 	finishSound string
 )
 
+func init() {
+	err := configure.Load("tomato", &cfg)
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Error: %v\n", err)
+		os.Exit(1)
+	}
+
+	finishSound = filepath.Join(configure.ConfigDir("tomato"), "ringing.mp3")
+	if !osext.IsExist(finishSound) {
+		err := ioutil.WriteFile(finishSound, Assets.Files["/ringing.mp3"].Data, 0755)
+		if err != nil {
+			fmt.Fprintf(os.Stderr, "Error: %v\n", err)
+			os.Exit(1)
+		}
+	}
+
+	if len(cfg.DataBase) == 0 {
+		cfg.DataBase = filepath.Join(configure.ConfigDir("tomato"), "tomato.db")
+		configure.Save("tomato", cfg)
+	}
+}
+
+// go:generate go-assets-builder -s="/data" -o bindata.go data
+
+func main() {
+	os.Exit(run(os.Args, os.Stdout, os.Stderr))
+}
+
 func run(args []string, outStream, errStream io.Writer) (exitCode int) {
 	var show string
 	var config bool
@@ -45,13 +73,8 @@ func run(args []string, outStream, errStream io.Writer) (exitCode int) {
 	})
 
 	if config {
-		editor := os.Getenv("EDITOR")
-		if len(editor) == 0 {
-			editor = "vim"
-		}
-
-		if err := configure.Edit("tomato", editor); err != nil {
-			fmt.Fprintf(outStream, "Error: %v\n", err)
+		if err := cmdConfig(); err != nil {
+			fmt.Fprintf(errStream, "Error: %v\n", err)
 			exitCode = 1
 			return
 		}
@@ -61,7 +84,7 @@ func run(args []string, outStream, errStream io.Writer) (exitCode int) {
 
 	if console {
 		if err = cmdConsole(cfg.DataBase); err != nil {
-			fmt.Fprintf(outStream, "Error: %v\n", err)
+			fmt.Fprintf(errStream, "Error: %v\n", err)
 			exitCode = 1
 			return
 		}
@@ -111,34 +134,6 @@ func run(args []string, outStream, errStream io.Writer) (exitCode int) {
 	}
 }
 
-func init() {
-	err := configure.Load("tomato", &cfg)
-	if err != nil {
-		fmt.Fprintf(os.Stderr, "Error: %v\n", err)
-		os.Exit(1)
-	}
-
-	finishSound = filepath.Join(configure.ConfigDir("tomato"), "ringing.mp3")
-	if !osext.IsExist(finishSound) {
-		err := ioutil.WriteFile(finishSound, Assets.Files["/ringing.mp3"].Data, 0755)
-		if err != nil {
-			fmt.Fprintf(os.Stderr, "Error: %v\n", err)
-			os.Exit(1)
-		}
-	}
-
-	if len(cfg.DataBase) == 0 {
-		cfg.DataBase = filepath.Join(configure.ConfigDir("tomato"), "tomato.db")
-		configure.Save("tomato", cfg)
-	}
-}
-
-// go:generate go-assets-builder -s="/data" -o bindata.go data
-
-func main() {
-	os.Exit(run(os.Args, os.Stdout, os.Stderr))
-}
-
 func cmdConsole(database string) error {
 	cmd := exec.Command("sqlite3", database)
 	cmd.Stdin = os.Stdin
@@ -146,4 +141,13 @@ func cmdConsole(database string) error {
 	cmd.Stderr = os.Stderr
 
 	return cmd.Run()
+}
+
+func cmdConfig() error {
+	editor := os.Getenv("EDITOR")
+	if len(editor) == 0 {
+		editor = "vim"
+	}
+
+	return configure.Edit("tomato", editor)
 }
