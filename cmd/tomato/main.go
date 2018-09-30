@@ -6,6 +6,7 @@ import (
 	"io"
 	"io/ioutil"
 	"os"
+	"os/exec"
 	"path/filepath"
 
 	"github.com/0xAX/notificator"
@@ -27,6 +28,7 @@ var (
 func run(args []string, outStream, errStream io.Writer) (exitCode int) {
 	var show string
 	var config bool
+	var console bool
 	var err error
 
 	exitCode = 0
@@ -35,6 +37,7 @@ func run(args []string, outStream, errStream io.Writer) (exitCode int) {
 	flags.SetOutput(errStream)
 	flags.StringVar(&show, "s", "", "Show your tomatoes. You can specify range, 'today', 'week', 'month' or 'all'.")
 	flags.BoolVar(&config, "c", false, "Edit config.")
+	flags.BoolVar(&console, "db", false, "Start a console for the database.")
 	flags.Parse(args[1:])
 
 	notify := notificator.New(notificator.Options{
@@ -48,6 +51,16 @@ func run(args []string, outStream, errStream io.Writer) (exitCode int) {
 		}
 
 		if err := configure.Edit("tomato", editor); err != nil {
+			fmt.Fprintf(outStream, "Error: %v\n", err)
+			exitCode = 1
+			return
+		}
+
+		return
+	}
+
+	if console {
+		if err = cmdConsole(cfg.DataBase); err != nil {
 			fmt.Fprintf(outStream, "Error: %v\n", err)
 			exitCode = 1
 			return
@@ -124,4 +137,13 @@ func init() {
 
 func main() {
 	os.Exit(run(os.Args, os.Stdout, os.Stderr))
+}
+
+func cmdConsole(database string) error {
+	cmd := exec.Command("sqlite3", database)
+	cmd.Stdin = os.Stdin
+	cmd.Stdout = os.Stdout
+	cmd.Stderr = os.Stderr
+
+	return cmd.Run()
 }
