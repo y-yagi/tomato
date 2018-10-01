@@ -6,6 +6,7 @@ import (
 	"io"
 	"io/ioutil"
 	"os"
+	"os/exec"
 	"path/filepath"
 
 	"github.com/0xAX/notificator"
@@ -24,9 +25,38 @@ var (
 	finishSound string
 )
 
+func init() {
+	err := configure.Load("tomato", &cfg)
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Error: %v\n", err)
+		os.Exit(1)
+	}
+
+	finishSound = filepath.Join(configure.ConfigDir("tomato"), "ringing.mp3")
+	if !osext.IsExist(finishSound) {
+		err := ioutil.WriteFile(finishSound, Assets.Files["/ringing.mp3"].Data, 0755)
+		if err != nil {
+			fmt.Fprintf(os.Stderr, "Error: %v\n", err)
+			os.Exit(1)
+		}
+	}
+
+	if len(cfg.DataBase) == 0 {
+		cfg.DataBase = filepath.Join(configure.ConfigDir("tomato"), "tomato.db")
+		configure.Save("tomato", cfg)
+	}
+}
+
+// go:generate go-assets-builder -s="/data" -o bindata.go data
+
+func main() {
+	os.Exit(run(os.Args, os.Stdout, os.Stderr))
+}
+
 func run(args []string, outStream, errStream io.Writer) (exitCode int) {
 	var show string
 	var config bool
+	var console bool
 	var err error
 
 	exitCode = 0
@@ -35,6 +65,7 @@ func run(args []string, outStream, errStream io.Writer) (exitCode int) {
 	flags.SetOutput(errStream)
 	flags.StringVar(&show, "s", "", "Show your tomatoes. You can specify range, 'today', 'week', 'month' or 'all'.")
 	flags.BoolVar(&config, "c", false, "Edit config.")
+	flags.BoolVar(&console, "db", false, "Start a console for the database.")
 	flags.Parse(args[1:])
 
 	notify := notificator.New(notificator.Options{
@@ -42,13 +73,18 @@ func run(args []string, outStream, errStream io.Writer) (exitCode int) {
 	})
 
 	if config {
-		editor := os.Getenv("EDITOR")
-		if len(editor) == 0 {
-			editor = "vim"
+		if err := cmdConfig(); err != nil {
+			fmt.Fprintf(errStream, "Error: %v\n", err)
+			exitCode = 1
+			return
 		}
 
-		if err := configure.Edit("tomato", editor); err != nil {
-			fmt.Fprintf(outStream, "Error: %v\n", err)
+		return
+	}
+
+	if console {
+		if err = cmdConsole(cfg.DataBase); err != nil {
+			fmt.Fprintf(errStream, "Error: %v\n", err)
 			exitCode = 1
 			return
 		}
@@ -98,30 +134,20 @@ func run(args []string, outStream, errStream io.Writer) (exitCode int) {
 	}
 }
 
-func init() {
-	err := configure.Load("tomato", &cfg)
-	if err != nil {
-		fmt.Fprintf(os.Stderr, "Error: %v\n", err)
-		os.Exit(1)
-	}
+func cmdConsole(database string) error {
+	cmd := exec.Command("sqlite3", database)
+	cmd.Stdin = os.Stdin
+	cmd.Stdout = os.Stdout
+	cmd.Stderr = os.Stderr
 
-	finishSound = filepath.Join(configure.ConfigDir("tomato"), "ringing.mp3")
-	if !osext.IsExist(finishSound) {
-		err := ioutil.WriteFile(finishSound, Assets.Files["/ringing.mp3"].Data, 0755)
-		if err != nil {
-			fmt.Fprintf(os.Stderr, "Error: %v\n", err)
-			os.Exit(1)
-		}
-	}
-
-	if len(cfg.DataBase) == 0 {
-		cfg.DataBase = filepath.Join(configure.ConfigDir("tomato"), "tomato.db")
-		configure.Save("tomato", cfg)
-	}
+	return cmd.Run()
 }
 
-// go:generate go-assets-builder -s="/data" -o bindata.go data
+func cmdConfig() error {
+	editor := os.Getenv("EDITOR")
+	if len(editor) == 0 {
+		editor = "vim"
+	}
 
-func main() {
-	os.Exit(run(os.Args, os.Stdout, os.Stderr))
+	return configure.Edit("tomato", editor)
 }
