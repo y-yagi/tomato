@@ -78,11 +78,11 @@
 
 [[projects]]
   branch = "master"
-  digest = "1:2ec40f67751c07d7235e77dc95850b138237137d599a723cf2ac4633cb651ecb"
+  digest = "1:95d01a1ea00b21e6bf6a5f930234d66c8dfab9863f769ee05a26e11a3bb95640"
   name = "github.com/y-yagi/configure"
   packages = ["."]
   pruneopts = ""
-  revision = "956c7b6f82b6777d7d06e7abcf9dd9b9f4f5c665"
+  revision = "8f74636cf48546775e2055ebf206ee5d6829388a"
 
 [[projects]]
   digest = "1:d73ea03ae2f091efb6c47352c11b0387e802568cd8e18f60f97ca344c7dceb53"
