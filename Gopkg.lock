@@ -3,11 +3,11 @@
 
 [[projects]]
   branch = "master"
-  digest = "1:2c01e05304115494a8ca2f0c0b9d0384c3dc5115627a2f5864e440201cffebb3"
+  digest = "1:1497e076791fd52385aeec859160ce247918f6e74fa660d597bc2bc8830b200b"
   name = "github.com/0xAX/notificator"
   packages = ["."]
   pruneopts = ""
-  revision = "88d57ee9043ba88d6a62e437fa15dda1ca0d2b59"
+  revision = "d81462e38c2145023f9ecf5414fc84d45d5bfe82"
 
 [[projects]]
   digest = "1:e4b30804a381d7603b8a344009987c1ba351c26043501b23b8c7ce21f0b67474"
