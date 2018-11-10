@@ -63,7 +63,7 @@ func run(args []string, outStream, errStream io.Writer) (exitCode int) {
 
 	flags := flag.NewFlagSet("tomato", flag.ExitOnError)
 	flags.SetOutput(errStream)
-	flags.StringVar(&show, "s", "", "Show your tomatoes. You can specify range, 'today', 'week', 'month' or 'all'.")
+	flags.StringVar(&show, "s", "", "Show your tomatoes. You can specify `range`, 'today', 'week', 'month' or 'all'.")
 	flags.BoolVar(&config, "c", false, "Edit config.")
 	flags.BoolVar(&console, "db", false, "Start a console for the database.")
 	flags.Parse(args[1:])
