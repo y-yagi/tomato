@@ -58,6 +58,7 @@ func run(args []string, outStream, errStream io.Writer) (exitCode int) {
 	var config bool
 	var console bool
 	var err error
+	var noSound bool
 
 	exitCode = 0
 
@@ -66,6 +67,7 @@ func run(args []string, outStream, errStream io.Writer) (exitCode int) {
 	flags.StringVar(&show, "s", "", "Show your tomatoes. You can specify `range`, 'today', 'week', 'month' or 'all'.")
 	flags.BoolVar(&config, "c", false, "Edit config.")
 	flags.BoolVar(&console, "db", false, "Start a console for the database.")
+	flags.BoolVar(&noSound, "no-sound", false, "Do not play sound when finished timer.")
 	flags.Parse(args[1:])
 
 	notify := notificator.New(notificator.Options{
@@ -99,6 +101,9 @@ func run(args []string, outStream, errStream io.Writer) (exitCode int) {
 		os.Exit(1)
 	}
 
+	if noSound {
+		finishSound = ""
+	}
 	historyFile := filepath.Join(configure.ConfigDir("tomato"), "readline.tmp")
 	timer := tomato.NewPomodoroTimer(outStream, notify, repo, finishSound, historyFile)
 
