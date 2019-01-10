@@ -50,7 +50,9 @@ func (timer *PomodoroTimer) Run() error {
 		timer.notify.Push("Tomato", "Pomodoro finished!", "", notificator.UR_CRITICAL)
 	}
 
-	_ = exec.Command("mpg123", timer.sound).Start()
+	if len(timer.sound) > 0 {
+		_ = exec.Command("mpg123", timer.sound).Start()
+	}
 
 	l, err := readline.NewEx(&readline.Config{
 		Prompt:          "Tags: ",
@@ -123,7 +125,9 @@ func (timer *PomodoroTimer) rest(duration time.Duration) {
 		timer.notify.Push("Tomato", "Break is over!", "", notificator.UR_CRITICAL)
 	}
 
-	_ = exec.Command("mpg123", timer.sound).Start()
+	if len(timer.sound) > 0 {
+		_ = exec.Command("mpg123", timer.sound).Start()
+	}
 
 	scanner := bufio.NewScanner(os.Stdin)
 	fmt.Fprint(timer.out, "\nPlease press the Enter key for start next tomato.\n")
