@@ -179,7 +179,7 @@ func (timer *PomodoroTimer) Show(showRange string) error {
 	}
 
 	if len(tagSummaries) == 0 {
-		fmt.Fprintf(timer.out, nothingMsg)
+		fmt.Fprint(timer.out, nothingMsg)
 		return nil
 	}
 
@@ -208,7 +208,7 @@ func (timer *PomodoroTimer) showToday() error {
 	}
 
 	if len(tomatoes) == 0 {
-		fmt.Fprintf(timer.out, nothingMsg)
+		fmt.Fprint(timer.out, nothingMsg)
 		return nil
 	}
 
