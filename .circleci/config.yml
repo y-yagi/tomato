@@ -3,15 +3,17 @@ jobs:
   build:
     docker:
       - image: circleci/golang:1.11
+        environment:
+          GO111MODULE: "on"
     working_directory: /go/src/github.com/y-yagi/tomato
 
     steps:
       - checkout
       - run:
-          name : Run dep
+          name: Run go mod
           command: |
-            curl https://raw.githubusercontent.com/golang/dep/master/install.sh | sh
-            dep ensure
+            go mod download
+            go mod vendor
       - run:
           name: Run vet
           command: go vet
@@ -36,14 +38,10 @@ jobs:
     steps:
       - checkout
       - run:
-          name: Run ci-dep-update
+          name: Run ci-modules-update
           command: |
-            go get -d github.com/y-yagi/ci-dep-update
-            cd $GOPATH/src/github.com/y-yagi/ci-dep-update
-            dep ensure -vendor-only
-            go install
-            cd /go/src/github.com/y-yagi/tomato
-            ci-dep-update -u y-yagi -r y-yagi/tomato
+            GO111MODULE=off go get -u github.com/y-yagi/ci-modules-update
+            ci-modules-update -u y-yagi -r y-yagi/jpcal
 
 workflows:
   version: 2
@@ -58,4 +56,4 @@ workflows:
             branches:
               only: master
     jobs:
-      - dep-update
+      - modules-update
