@@ -30,7 +30,7 @@ jobs:
       - run:
           name: Run tests
           command: go test -v
-  dep-update:
+  modules-update:
     docker:
       - image: circleci/golang:1.11
     working_directory: /go/src/github.com/y-yagi/tomato
