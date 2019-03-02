@@ -1,38 +1,54 @@
 version: 2
+
+test: &test
+  steps:
+    - checkout
+
+    - run:
+        name: Run go mod
+        command: |
+          go mod download
+          go mod vendor
+    - run:
+        name: Run vet
+        command: go vet ./...
+    - run:
+        name: Run lint
+        command: |
+          GO111MODULE=off go get -u golang.org/x/lint/golint
+          GO111MODULE=off golint -set_exit_status $(go list ./... | grep -v /vendor/)
+    - run:
+        name: Run staticcheck
+        command: |
+          GO111MODULE=off go get -u honnef.co/go/tools/cmd/staticcheck
+          GO111MODULE=off staticcheck ./...
+
+    - run:
+        name: Run tests
+        command: go test -v
+
 jobs:
-  build:
+  go-1.11-test:
     docker:
-      - image: circleci/golang:1.11
+      - image: golang:1.11-stretch
         environment:
           GO111MODULE: "on"
     working_directory: /go/src/github.com/y-yagi/tomato
+    <<: *test
 
-    steps:
-      - checkout
-      - run:
-          name: Run go mod
-          command: |
-            go mod download
-            go mod vendor
-      - run:
-          name: Run vet
-          command: go vet
-      - run:
-          name: Run lint
-          command: |
-            go get -u golang.org/x/lint/golint
-            golint -set_exit_status
-      - run:
-          name: Run staticcheck
-          command: |
-            go get -u honnef.co/go/tools/cmd/staticcheck
-            staticcheck
-      - run:
-          name: Run tests
-          command: go test -v
+  go-1.12-test:
+    docker:
+      - image: golang:1.12-stretch
+        environment:
+          GO111MODULE: "on"
+    working_directory: /go/src/github.com/y-yagi/tomato
+    <<: *test
+
   modules-update:
     docker:
-      - image: circleci/golang:1.11
+      - image: golang:1.11-stretch
+        environment:
+          GO111MODULE: "on"
     working_directory: /go/src/github.com/y-yagi/tomato
 
     steps:
@@ -41,13 +57,15 @@ jobs:
           name: Run ci-modules-update
           command: |
             GO111MODULE=off go get -u github.com/y-yagi/ci-modules-update
+            ci-modules-update -v
             ci-modules-update -u y-yagi -r y-yagi/tomato
 
 workflows:
   version: 2
   build:
     jobs:
-      - build
+      - go-1.11-test
+      - go-1.12-test
   scheduled-workflow:
     triggers:
       - schedule:
