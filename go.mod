@@ -9,9 +9,9 @@ require (
 	github.com/jessevdk/go-assets v0.0.0-20160921144138-4f4301a06e15
 	github.com/jinzhu/now v1.0.1
 	github.com/jmoiron/sqlx v1.2.0
-	github.com/lib/pq v1.1.1 // indirect
+	github.com/lib/pq v1.2.0 // indirect
 	github.com/mattn/go-runewidth v0.0.4 // indirect
-	github.com/mattn/go-sqlite3 v1.10.0
+	github.com/mattn/go-sqlite3 v1.11.0
 	github.com/olekukonko/tablewriter v0.0.1
 	github.com/y-yagi/configure v0.2.0
 	github.com/y-yagi/goext v0.1.0
