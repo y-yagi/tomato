@@ -15,6 +15,6 @@ require (
 	github.com/olekukonko/tablewriter v0.0.1
 	github.com/y-yagi/configure v0.2.0
 	github.com/y-yagi/goext v0.2.0
-	golang.org/x/sys v0.0.0-20190804053845-51ab0e2deafa // indirect
+	golang.org/x/sys v0.0.0-20190812172437-4e8604ab3aff // indirect
 	google.golang.org/appengine v1.6.1 // indirect
 )
