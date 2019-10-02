@@ -27,7 +27,7 @@ SELECT COUNT(tag) as tag_count, tag FROM tomatoes WHERE created_at BETWEEN $1 AN
 `
 
 	tagsQuery = `
-SELECT tag FROM tomatoes GROUP BY tag ORDER BY created_at ASC
+SELECT tag FROM (SELECT id, tag FROM tomatoes GROUP BY tag ORDER BY created_at DESC LIMIT 100) ORDER BY id ASC;
 `
 )
 
