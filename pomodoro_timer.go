@@ -69,11 +69,6 @@ func (timer *PomodoroTimer) Run() error {
 	go func() {
 		for {
 			tag, err = l.Readline()
-			if err == readline.ErrInterrupt {
-				done <- true
-				return
-			}
-
 			if !strext.IsBlank(tag) {
 				done <- true
 				return
