@@ -47,7 +47,7 @@ func (timer *PomodoroTimer) Run() error {
 	timer.countDown(taskDuration)
 
 	if timer.notify != nil {
-		timer.notify.Push("Tomato", "Pomodoro finished!", "", notificator.UR_CRITICAL)
+		timer.notify.Push("Tomato", "Pomodoro finished!", "", notificator.UR_NORMAL)
 	}
 
 	if len(timer.sound) > 0 {
