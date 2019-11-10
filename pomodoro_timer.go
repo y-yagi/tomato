@@ -87,7 +87,7 @@ func (timer *PomodoroTimer) Run() error {
 			return err
 		case <-time.After(60 * time.Second):
 			if timer.notify != nil {
-				timer.notify.Push("Tomato", "Please input tag", "", notificator.UR_CRITICAL)
+				timer.notify.Push("Tomato", "Please input tag", "", notificator.UR_NORMAL)
 			}
 		}
 	}
@@ -117,7 +117,7 @@ func (timer *PomodoroTimer) rest(duration time.Duration) {
 	timer.countDown(duration)
 
 	if timer.notify != nil {
-		timer.notify.Push("Tomato", "Break is over!", "", notificator.UR_CRITICAL)
+		timer.notify.Push("Tomato", "Break is over!", "", notificator.UR_NORMAL)
 	}
 
 	if len(timer.sound) > 0 {
@@ -138,7 +138,7 @@ func (timer *PomodoroTimer) rest(duration time.Duration) {
 			return
 		case <-time.After(60 * time.Second):
 			if timer.notify != nil {
-				timer.notify.Push("Tomato", "Please press the Enter key for start next tomato.", "", notificator.UR_CRITICAL)
+				timer.notify.Push("Tomato", "Please press the Enter key for start next tomato.", "", notificator.UR_NORMAL)
 			}
 		}
 	}
