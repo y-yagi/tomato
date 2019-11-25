@@ -12,7 +12,7 @@ require (
 	github.com/lib/pq v1.2.0 // indirect
 	github.com/mattn/go-runewidth v0.0.6 // indirect
 	github.com/mattn/go-sqlite3 v1.11.0
-	github.com/olekukonko/tablewriter v0.0.1
+	github.com/olekukonko/tablewriter v0.0.3
 	github.com/y-yagi/configure v0.2.0
 	github.com/y-yagi/goext v0.3.0
 	golang.org/x/sys v0.0.0-20191104094858-e8c54fb511f6 // indirect
