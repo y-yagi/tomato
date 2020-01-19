@@ -29,6 +29,8 @@ type PomodoroTimer struct {
 	historyFile string
 }
 
+const maxRetry = 5
+
 // NewPomodoroTimer creates a new timer.
 func NewPomodoroTimer(out io.Writer, notify *notificator.Notificator, repo *Repository, sound string, historyFile string) *PomodoroTimer {
 	timer := &PomodoroTimer{out: out, notify: notify, repo: repo, sound: sound, historyFile: historyFile}
@@ -40,6 +42,8 @@ func NewPomodoroTimer(out io.Writer, notify *notificator.Notificator, repo *Repo
 func (timer *PomodoroTimer) Run() error {
 	var tag string
 	var err error
+	var retry int
+
 	done := make(chan bool)
 
 	fmt.Fprint(timer.out, "Start task.\n")
@@ -86,8 +90,9 @@ func (timer *PomodoroTimer) Run() error {
 			}
 			return err
 		case <-time.After(60 * time.Second):
-			if timer.notify != nil {
+			if timer.notify != nil && retry < maxRetry {
 				timer.notify.Push("Tomato", "Please input tag", "", notificator.UR_NORMAL)
+				retry++
 			}
 		}
 	}
@@ -111,6 +116,8 @@ func (timer *PomodoroTimer) IsStarted() bool {
 }
 
 func (timer *PomodoroTimer) rest(duration time.Duration) {
+	var retry int
+
 	done := make(chan bool)
 	fmt.Fprintf(timer.out, "\nStart rest.\n")
 
@@ -137,8 +144,9 @@ func (timer *PomodoroTimer) rest(duration time.Duration) {
 		case <-done:
 			return
 		case <-time.After(60 * time.Second):
-			if timer.notify != nil {
+			if timer.notify != nil && retry < maxRetry {
 				timer.notify.Push("Tomato", "Please press the Enter key for start next tomato.", "", notificator.UR_NORMAL)
+				retry++
 			}
 		}
 	}
