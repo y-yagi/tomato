@@ -11,11 +11,10 @@ require (
 	github.com/jmoiron/sqlx v1.2.0
 	github.com/lib/pq v1.2.0 // indirect
 	github.com/mattn/go-runewidth v0.0.8 // indirect
-	github.com/mattn/go-sqlite3 v1.13.0
+	github.com/mattn/go-sqlite3 v1.14.0
 	github.com/olekukonko/tablewriter v0.0.4
 	github.com/y-yagi/configure v0.2.0
 	github.com/y-yagi/goext v0.4.0
-	golang.org/x/sys v0.0.0-20200223170610-d5e6a3e2c0ae // indirect
 	google.golang.org/appengine v1.6.5 // indirect
 )
 
