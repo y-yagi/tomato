@@ -14,7 +14,7 @@ require (
 	github.com/mattn/go-sqlite3 v1.14.0
 	github.com/olekukonko/tablewriter v0.0.4
 	github.com/y-yagi/configure v0.2.0
-	github.com/y-yagi/goext v0.4.0
+	github.com/y-yagi/goext v0.5.0
 	google.golang.org/appengine v1.6.5 // indirect
 )
 
