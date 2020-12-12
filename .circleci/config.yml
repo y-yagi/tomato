@@ -30,7 +30,7 @@ test: &test
 jobs:
   go-1.12-test:
     docker:
-      - image: golang:1.12-stretch
+      - image: golang:1.15-stretch
         environment:
           GO111MODULE: "on"
     working_directory: /go/src/github.com/y-yagi/tomato
