@@ -9,9 +9,8 @@ require (
 	github.com/jinzhu/now v1.1.1
 	github.com/jmoiron/sqlx v1.3.1
 	github.com/lib/pq v1.2.0 // indirect
-	github.com/mattn/go-runewidth v0.0.8 // indirect
 	github.com/mattn/go-sqlite3 v1.14.6
-	github.com/olekukonko/tablewriter v0.0.4
+	github.com/olekukonko/tablewriter v0.0.5
 	github.com/y-yagi/configure v0.2.0
 	github.com/y-yagi/goext v0.6.0
 	google.golang.org/appengine v1.6.5 // indirect
