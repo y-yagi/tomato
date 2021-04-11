@@ -9,6 +9,8 @@ import (
 	"os/exec"
 	"path/filepath"
 
+	_ "embed"
+
 	"github.com/0xAX/notificator"
 	_ "github.com/mattn/go-sqlite3"
 	"github.com/y-yagi/configure"
@@ -23,6 +25,9 @@ type config struct {
 var (
 	cfg         config
 	finishSound string
+
+	//go:embed ringing.mp3
+	soundData []byte
 )
 
 func init() {
@@ -34,7 +39,7 @@ func init() {
 
 	finishSound = filepath.Join(configure.ConfigDir("tomato"), "ringing.mp3")
 	if !osext.IsExist(finishSound) {
-		err := ioutil.WriteFile(finishSound, Assets.Files["/ringing.mp3"].Data, 0755)
+		err := ioutil.WriteFile(finishSound, soundData, 0755)
 		if err != nil {
 			fmt.Fprintf(os.Stderr, "Error: %v\n", err)
 			os.Exit(1)
@@ -46,8 +51,6 @@ func init() {
 		configure.Save("tomato", cfg)
 	}
 }
-
-// go:generate go-assets-builder -s="/data" -o bindata.go data
 
 func main() {
 	os.Exit(run(os.Args, os.Stdout, os.Stderr))
