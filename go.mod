@@ -8,12 +8,11 @@ require (
 	github.com/jessevdk/go-assets v0.0.0-20160921144138-4f4301a06e15
 	github.com/jinzhu/now v1.1.2
 	github.com/jmoiron/sqlx v1.3.3
-	github.com/lib/pq v1.2.0 // indirect
 	github.com/mattn/go-sqlite3 v1.14.6
 	github.com/olekukonko/tablewriter v0.0.5
 	github.com/y-yagi/configure v0.2.0
 	github.com/y-yagi/goext v0.6.0
-	google.golang.org/appengine v1.6.5 // indirect
+	golang.org/x/sys v0.0.0-20190215142949-d0b11bdaac8a // indirect
 )
 
-go 1.13
+go 1.16
