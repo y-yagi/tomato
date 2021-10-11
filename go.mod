@@ -9,7 +9,7 @@ require (
 	github.com/jmoiron/sqlx v1.3.4
 	github.com/mattn/go-sqlite3 v1.14.8
 	github.com/olekukonko/tablewriter v0.0.5
-	github.com/y-yagi/configure v0.2.0
+	github.com/y-yagi/configure v0.3.0
 	github.com/y-yagi/goext v0.6.0
 	golang.org/x/sys v0.0.0-20190215142949-d0b11bdaac8a // indirect
 )
