@@ -2,16 +2,14 @@ module github.com/y-yagi/tomato
 
 require (
 	github.com/0xAX/notificator v0.0.0-20210731104411-c42e3d4a43ee
-	github.com/chzyer/logex v1.1.10 // indirect
-	github.com/chzyer/readline v0.0.0-20180603132655-2972be24d48e
-	github.com/chzyer/test v0.0.0-20180213035817-a1ea475d72b1 // indirect
+	github.com/chzyer/readline v1.5.1
 	github.com/jinzhu/now v1.1.5
 	github.com/jmoiron/sqlx v1.3.5
 	github.com/mattn/go-sqlite3 v1.14.16
 	github.com/olekukonko/tablewriter v0.0.5
 	github.com/y-yagi/configure v0.3.0
 	github.com/y-yagi/goext v0.6.0
-	golang.org/x/sys v0.0.0-20190215142949-d0b11bdaac8a // indirect
+	golang.org/x/sys v0.0.0-20220310020820-b874c991c1a5 // indirect
 )
 
 require (
