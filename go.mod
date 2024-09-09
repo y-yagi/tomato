@@ -5,7 +5,7 @@ require (
 	github.com/chzyer/readline v1.5.1
 	github.com/jinzhu/now v1.1.5
 	github.com/jmoiron/sqlx v1.3.5
-	github.com/mattn/go-sqlite3 v1.14.16
+	github.com/mattn/go-sqlite3 v1.14.23
 	github.com/olekukonko/tablewriter v0.0.5
 	github.com/y-yagi/configure v0.3.0
 	github.com/y-yagi/goext v0.6.0
