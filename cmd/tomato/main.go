@@ -4,7 +4,6 @@ import (
 	"flag"
 	"fmt"
 	"io"
-	"io/ioutil"
 	"os"
 	"os/exec"
 	"path/filepath"
@@ -39,7 +38,7 @@ func init() {
 
 	finishSound = filepath.Join(configure.ConfigDir("tomato"), "ringing.mp3")
 	if !osext.IsExist(finishSound) {
-		err := ioutil.WriteFile(finishSound, soundData, 0755)
+		err := os.WriteFile(finishSound, soundData, 0755)
 		if err != nil {
 			fmt.Fprintf(os.Stderr, "Error: %v\n", err)
 			os.Exit(1)
