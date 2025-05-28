@@ -5,7 +5,6 @@ import (
 	"errors"
 	"fmt"
 	"io"
-	"io/ioutil"
 	"os"
 	"os/exec"
 	"strconv"
@@ -270,6 +269,6 @@ func (timer *PomodoroTimer) countDown(duration time.Duration) {
 func (timer *PomodoroTimer) init() {
 	if !osext.IsExist(timer.historyFile) {
 		tags, _ := timer.repo.selectTags()
-		ioutil.WriteFile(timer.historyFile, []byte(strings.Join(tags, "\n")), 0644)
+		os.WriteFile(timer.historyFile, []byte(strings.Join(tags, "\n")), 0644)
 	}
 }
