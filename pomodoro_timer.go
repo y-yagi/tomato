@@ -186,7 +186,7 @@ func (timer *PomodoroTimer) Show(showRange string) error {
 	}
 
 	table := tablewriter.NewWriter(timer.out)
-	table.SetHeader([]string{"Count", "Tag"})
+	table.Header("Count", "Tag")
 	var values = []string{}
 
 	for _, tagSummary := range tagSummaries {
@@ -215,7 +215,7 @@ func (timer *PomodoroTimer) showToday() error {
 	}
 
 	table := tablewriter.NewWriter(timer.out)
-	table.SetHeader([]string{"id", "Created", "Tag"})
+	table.Header("id", "Created", "Tag")
 	var values = []string{}
 
 	for i, tomato := range tomatoes {
